@@ -33,7 +33,7 @@ SAVEHIST=1000
 
 #zstyle ':completion:*:*:*:*:descriptions' format '%F{green}-- %d --%f'
 zstyle ':completion:*' menu select
-zstyle ':completion:*:options' list-colors '=(-- *)=38;5;214'
+zstyle ':completion:*:options' list-colors '=(-- *)=38;5;144'
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
