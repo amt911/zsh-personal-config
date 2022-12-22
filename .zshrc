@@ -31,10 +31,8 @@ HISTFILE=~/.histfile
 HISTSIZE=1000
 SAVEHIST=1000
 
-zstyle ':completion:*:*:*:*:descriptions' format '%F{green}-- %d --%f'
+#zstyle ':completion:*:*:*:*:descriptions' format '%F{green}-- %d --%f'
 zstyle ':completion:*' menu select
-#zstyle ':completion:*' list-colors '=(#b)(--[^ ]#)(*)=38;5;220;1=38;5;216'
-#zstyle ':completion:*' list-colors '=(#b)(--[^ ]#)(*)=38;5;216;1=38;5;255'
 zstyle ':completion:*:options' list-colors '=(-- *)=38;5;214'
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
