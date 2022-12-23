@@ -26,6 +26,7 @@ bindkey '^[[F' end-of-line
 bindkey '^[[3~' delete-char
 
 alias ls=lsd
+alias sudo="sudo "
 
 HISTFILE=~/.histfile
 HISTSIZE=1000
