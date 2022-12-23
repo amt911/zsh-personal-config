@@ -13,7 +13,8 @@ compinit
 source /usr/share/zinit/zinit.zsh
 zinit light zsh-users/zsh-autosuggestions
 zinit light zsh-users/zsh-history-substring-search
-zinit light zsh-users/zsh-syntax-highlighting
+#zinit light zsh-users/zsh-syntax-highlighting
+zinit light  zdharma-continuum/fast-syntax-highlighting 
 zinit light zsh-users/zsh-completions
 zinit ice depth=1; zinit light romkatv/powerlevel10k
 
