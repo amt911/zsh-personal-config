@@ -37,5 +37,8 @@ SAVEHIST=1000
 zstyle ':completion:*' menu select
 zstyle ':completion:*:options' list-colors '=(-- *)=38;5;144'
 
+_ls_colors=":ow=01;40"
+zstyle ':completion:*:default' list-colors ${(s.:.)_ls_colors}
+
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
