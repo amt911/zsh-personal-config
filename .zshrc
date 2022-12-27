@@ -30,14 +30,15 @@ alias ls=lsd
 alias sudo="sudo "
 
 HISTFILE=~/.histfile
-HISTSIZE=1000
-SAVEHIST=1000
+HISTSIZE=100000
+SAVEHIST=100000
 
 #zstyle ':completion:*:*:*:*:descriptions' format '%F{green}-- %d --%f'
 zstyle ':completion:*' menu select
 zstyle ':completion:*:options' list-colors '=(-- *)=38;5;144'
 
-_ls_colors=":ow=01;40"
+#_ls_colors=":ow=02;69"
+_ls_colors='no=00;37:fi=00:di=01;33:ln=04;36:pi=40;33:so=01;35:bd=40;33;01:'
 zstyle ':completion:*:default' list-colors ${(s.:.)_ls_colors}
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
