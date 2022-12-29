@@ -26,9 +26,11 @@ bindkey '^[[H' beginning-of-line
 bindkey '^[[F' end-of-line
 bindkey '^[[3~' delete-char
 
+#Zona para los alias
 alias ls=lsd
 alias tree="lsd --tree"
 alias sudo="sudo "
+alias dd="dd status=progress"
 
 HISTFILE=~/.histfile
 HISTSIZE=100000
