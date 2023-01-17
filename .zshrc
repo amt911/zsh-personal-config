@@ -96,6 +96,7 @@ zstyle ':completion:*:manuals.(^1*)' insert-sections true
 ###FIN DE LOS COMANDSO EXTRAIDOS DE PREZTO###
 #############################################
 
+
 #Cambiar el color a las sugerencias de archivos
 _ls_colors='no=00;37:fi=00:di=01;33:ln=04;36:pi=40;33:so=01;35:bd=40;33;01:'
 zstyle ':completion:*:default' list-colors ${(s.:.)_ls_colors}
