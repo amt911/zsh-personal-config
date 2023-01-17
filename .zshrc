@@ -32,17 +32,25 @@ alias tree="lsd --tree"
 alias sudo="sudo "
 alias dd="dd status=progress"
 
+#TAMAÑO DEL HISTORIAL
 HISTFILE=~/.histfile
 HISTSIZE=100000
 SAVEHIST=100000
 
-#zstyle ':completion:*:*:*:*:descriptions' format '%F{green}-- %d --%f'
+
+#Para que se puedan seleccionar con las flechas las opciones
 zstyle ':completion:*' menu select
+
+#BROKEN: Cambiar el color a las descripciones
 zstyle ':completion:*:options' list-colors '=(-- *)=38;5;144'
 
-#_ls_colors=":ow=02;69"
+#Cambiar el color a las sugerencias de archivos
 _ls_colors='no=00;37:fi=00:di=01;33:ln=04;36:pi=40;33:so=01;35:bd=40;33;01:'
 zstyle ':completion:*:default' list-colors ${(s.:.)_ls_colors}
+
+#Parser del man para comandos que no lo tienen
+compdef _gnu_generic nvidia-smi
+
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
