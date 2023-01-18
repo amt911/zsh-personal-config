@@ -33,6 +33,8 @@ add_plugin "zsh-users/zsh-autosuggestions"
 add_plugin "zsh-users/zsh-history-substring-search"
 add_plugin "zdharma-continuum/fast-syntax-highlighting"
 add_plugin "zsh-users/zsh-completions"
+add_plugin "romkatv/powerlevel10k" "--depth=1"
+
 
 #Parser del man para comandos que no lo tienen
 compdef _gnu_generic nvidia-smi grub-install
