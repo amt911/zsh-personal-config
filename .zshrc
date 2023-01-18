@@ -102,7 +102,7 @@ _ls_colors='no=00;37:fi=00:di=01;33:ln=04;36:pi=40;33:so=01;35:bd=40;33;01:'
 zstyle ':completion:*:default' list-colors ${(s.:.)_ls_colors}
 
 #Parser del man para comandos que no lo tienen
-compdef _gnu_generic nvidia-smi
+compdef _gnu_generic nvidia-smi grub-install
 
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
