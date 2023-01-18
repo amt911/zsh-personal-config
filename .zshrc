@@ -12,12 +12,12 @@ export ZSH_CONFIG_DIR="$HOME/.config/zsh"
 autoload -U compinit
 compinit
 
-source /usr/share/zinit/zinit.zsh
-zinit light zsh-users/zsh-autosuggestions
-zinit light zsh-users/zsh-history-substring-search
-zinit light  zdharma-continuum/fast-syntax-highlighting 
-zinit light zsh-users/zsh-completions
-zinit ice depth=1; zinit light romkatv/powerlevel10k
+# source /usr/share/zinit/zinit.zsh
+# zinit light zsh-users/zsh-autosuggestions
+# zinit light zsh-users/zsh-history-substring-search
+# zinit light  zdharma-continuum/fast-syntax-highlighting 
+# zinit light zsh-users/zsh-completions
+#zinit ice depth=1; zinit light romkatv/powerlevel10k
 
 #source neccesary files
 source $ZSH_CONFIG_DIR/zsh-bindings.sh
@@ -29,7 +29,10 @@ source $ZSH_CONFIG_DIR/zsh-styles.sh
 source $ZSH_CONFIG_DIR/pak_manager.sh
 
 #Plugins
+add_plugin "zsh-users/zsh-autosuggestions"
+add_plugin "zsh-users/zsh-history-substring-search"
 add_plugin "zdharma-continuum/fast-syntax-highlighting"
+add_plugin "zsh-users/zsh-completions"
 
 #Parser del man para comandos que no lo tienen
 compdef _gnu_generic nvidia-smi grub-install
