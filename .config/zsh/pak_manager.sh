@@ -4,7 +4,7 @@ REPO_URL="https://github.com"
 
 # Time threshold
 TIME_THRESHOLD=604800    # 1 week in seconds
-#TIME_THRESHOLD=20 # 20 hours in seconds
+# TIME_THRESHOLD=10 # 20 hours in seconds
 
 # Colors
 RED='\033[0;31m'
@@ -35,7 +35,9 @@ add_plugin() {
 
     #Se comprueba si existe el directorio, indicando que se ha descargado
     if [ ! -d "$ZSH_PLUGIN_DIR/$PLUGIN_NAME" ]; then
-        echo -e "\n$BRIGHT_CYAN####################################$NO_COLOR Installing $GREEN$PLUGIN_NAME$NO_COLOR $BRIGHT_CYAN####################################$NO_COLOR"
+        raw_msg="Installing $PLUGIN_NAME"
+        print_message "Installing $GREEN$PLUGIN_NAME$NO_COLOR" "$(($COLUMNS - 4))" "$BRIGHT_CYAN#$NO_COLOR" "${#raw_msg}"
+
         # Si se pide algun comando extra a git, se pone como entrada a la funcion
         if [ "$#" -eq 2 ]; then
             git clone "$2" "$REPO_URL/$1" "$ZSH_PLUGIN_DIR/$PLUGIN_NAME"
@@ -48,17 +50,43 @@ add_plugin() {
 
     # En caso de haberse pasado esa marca de tiempo, se le hace un pull al plugin para obtener los cambios
     elif [ $(($(date +%s) - $(cat "$ZSH_PLUGIN_DIR/.$PLUGIN_NAME"))) -ge $TIME_THRESHOLD ]; then
-        echo "\n$BRIGHT_CYAN####################################$NO_COLOR Updating $GREEN$PLUGIN_NAME$NO_COLOR $BRIGHT_CYAN####################################$NO_COLOR"
+        raw_msg="Updating $PLUGIN_NAME"
+        print_message "Updating $GREEN$PLUGIN_NAME$NO_COLOR" "$(($COLUMNS - 4))" "$BRIGHT_CYAN#$NO_COLOR" "${#raw_msg}"
 
         cd "$ZSH_PLUGIN_DIR/$PLUGIN_NAME"
         git pull
-        cd $HOME    # JUST IN CASE
-        date +%s > "$ZSH_PLUGIN_DIR/.$PLUGIN_NAME"
+        cd $HOME # JUST IN CASE
+        date +%s >"$ZSH_PLUGIN_DIR/.$PLUGIN_NAME"
     fi
 
     source_plugin "$PLUGIN_NAME"
 }
 
-update_plugin() {
+#\\033\[0;?[0-9]*m to find ansi escape codes
 
+#Prints a message given a max length. It fills the remaining space with "#"
+#$1: Message to be printed
+#$2: Max length of the message (including the message itself)
+#$3: Character to fill the remaining space. It can be colored
+#$4 (optional): Message length. Useful when it has ANSI escape codes, since it detects them as characters.
+print_message() {
+    msg_length=${#1}
+
+    if [ $# -eq 4 ]; then
+        msg_length=$4
+    fi
+
+    max_length="$2"
+    hashtag_nro=$(((max_length - $msg_length - 2) / 2))
+    echo "hash: $hashtag_nro"
+
+    printf "\n"
+    printf "%0.s$3" $(seq 1 $hashtag_nro)
+    if [ $(($msg_length % 2)) -ne 0 ]; then
+        printf " %b  " $1
+    else
+        printf " %b " $1
+    fi
+    printf "%0.s$3" $(seq 1 $hashtag_nro)
+    printf "\n"
 }
