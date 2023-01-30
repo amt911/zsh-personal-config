@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/zsh
 
 #Para que se puedan seleccionar con las flechas las opciones
 zstyle ':completion:*' menu select
@@ -62,6 +62,6 @@ zstyle ':completion:*:manuals.(^1*)' insert-sections true
 #Cambiar el color a las sugerencias de archivos
 #LS_COLORS='no=00;37:fi=00:di=01;33:ln=04;36:pi=40;33:so=01;35:bd=40;33;01:'
 
-#Modificación del framework Prezto, cambiando el color de los directorios y de los programas
+# Modificación del framework Prezto, cambiando el color de los directorios y de los programas
 LS_COLORS=${LS_COLORS:-'di=01;94:ln=35:so=32:pi=33:ex=93:bd=36;01:cd=33;01:su=31;40;07:sg=36;40;07:tw=32;40;07:ow=33;40;07:'}
 zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/zsh
 
 #Zona para los alias
 alias ls=lsd
