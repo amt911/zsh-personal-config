@@ -78,8 +78,10 @@ print_message() {
 
     max_length="$2"
     hashtag_nro=$(((max_length - $msg_length - 2) / 2))
-    echo "hash: $hashtag_nro"
-
+    #echo "hash: $hashtag_nro"
+    
+    printf "\n"
+    printf "%0.s$3" $(seq 1 $2)
     printf "\n"
     printf "%0.s$3" $(seq 1 $hashtag_nro)
     if [ $(($msg_length % 2)) -ne 0 ]; then
@@ -89,4 +91,6 @@ print_message() {
     fi
     printf "%0.s$3" $(seq 1 $hashtag_nro)
     printf "\n"
+    printf "%0.s$3" $(seq 1 $2)
+    printf "\n"    
 }
