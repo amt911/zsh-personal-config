@@ -14,15 +14,28 @@ autoload -U compinit
 compinit
 
 #source neccesary files
-source $ZSH_CONFIG_DIR/zsh-bindings.sh
-source $ZSH_CONFIG_DIR/zsh-aliases.sh
-source $ZSH_CONFIG_DIR/zsh-exports.sh
-source $ZSH_CONFIG_DIR/zsh-styles.sh
+#EXPERIMENTAL FILE
+source $ZSH_CONFIG_DIR/functions.sh
+
+source $ZSH_CONFIG_DIR/zsh-bindings.zsh
+source $ZSH_CONFIG_DIR/zsh-aliases.zsh
+source $ZSH_CONFIG_DIR/zsh-exports.zsh
+source $ZSH_CONFIG_DIR/zsh-styles.zsh
+
 
 #source package (plugin) manager
-source $ZSH_CONFIG_DIR/pak_manager.sh
+source $ZSH_CONFIG_DIR/pak_manager.zsh
 
 #Plugins
+
+#Only loads this plugin and fzf's autocompletion if it (fzf) is installed
+if [ $(check_fzf) -eq 0 ]; then
+  source /usr/share/fzf/key-bindings.zsh
+  source /usr/share/fzf/completion.zsh
+
+  add_plugin "Aloxaf/fzf-tab"
+fi
+
 add_plugin "zsh-users/zsh-autosuggestions"
 add_plugin "zsh-users/zsh-history-substring-search"
 add_plugin "zdharma-continuum/fast-syntax-highlighting"

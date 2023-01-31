@@ -13,11 +13,11 @@ GREEN='\033[0;32m'
 BRIGHT_CYAN='\033[0;96m'
 
 source_plugin() {
-    if [ -f "$ZSH_PLUGIN_DIR/$1/$1.zsh" ]; then
-        source "$ZSH_PLUGIN_DIR/$1/$1.zsh"
-
-    elif [ -f "$ZSH_PLUGIN_DIR/$1/$1.plugin.zsh" ]; then
+    if [ -f "$ZSH_PLUGIN_DIR/$1/$1.plugin.zsh" ]; then
         source "$ZSH_PLUGIN_DIR/$1/$1.plugin.zsh"
+
+    elif [ -f "$ZSH_PLUGIN_DIR/$1/$1.zsh" ]; then
+        source "$ZSH_PLUGIN_DIR/$1/$1.zsh"
 
     #Este ultimo para powerlevel10k
     elif [ -f "$ZSH_PLUGIN_DIR/$1/$1.zsh-theme" ]; then

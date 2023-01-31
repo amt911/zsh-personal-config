@@ -1,10 +1,42 @@
 #!/bin/zsh
 
-#Para que se puedan seleccionar con las flechas las opciones
-zstyle ':completion:*' menu select
+
+#If fzf is installed, it continues with its config
+if [ $(check_fzf) -eq 0 ]; then
+    #This styles are from the fzf-tab's readme.md
+
+    # disable sort when completing `git checkout`
+    zstyle ':completion:*:git-checkout:*' sort false
+
+    # set descriptions format to enable group support
+    zstyle ':completion:*:descriptions' format '[%d]'
+
+    # preview directory's content with lsd when completing cd
+    zstyle ':fzf-tab:complete:cd:*' fzf-preview 'lsd -1 --color=always $realpath'
+
+    # switch group using `,` and `.`
+    zstyle ':fzf-tab:*' switch-group ',' '.'
+
+else
+    #En caso de no encontrar fzf, no añade fzf-tab y además incluye los estilos extraidos de Prezto
+    #Esto se hace asi porque fzf-tab imprime los grupos mal: %F{yellow}-- ... ---%f
+    zstyle ':completion:*:descriptions' format ' %F{yellow}-- %d --%f'
+    zstyle ':completion:*:messages' format ' %F{purple} -- %d --%f'
+    zstyle ':completion:*' format ' %F{yellow}-- %d --%f'
+fi
+
+
+#Para que se puedan seleccionar con las flechas las opciones y además se pueda buscar en los menús
+# zstyle ':completion:*' menu select
+zstyle ':completion:*' menu select yes search interactive
+
+#Estas dos lineas sirven para hacer busqueda case insensitive (solo sirve en el caso de los switches para el nombre, no
+#para la descripcion)
+zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
+unsetopt CASE_GLOB
 
 #BROKEN: Cambiar el color a las descripciones
-zstyle ':completion:*:options' list-colors '=(-- *)=38;5;144'
+#zstyle ':completion:*:options' list-colors '=(-- *)=38;5;144'
 
 #########################################################################################
 ################### ESTILOS EXTRAIDOS DEL MODULO COMPLETION DE PREZTO ###################
@@ -14,12 +46,11 @@ zstyle ':completion:*:options' list-colors '=(-- *)=38;5;144'
 #Ofrece ayudas en los comandos. Por ejemplo: mkdir TAB aparece que es una carpeta.
 zstyle ':completion:*:options' auto-description '%d'
 
-#Mensajes de ayuda, se tiene uno generico y se especifica cada vez mas
-zstyle ':completion:*:corrections' format ' %F{green}-- %d (errors: %e) --%f'
-zstyle ':completion:*:descriptions' format ' %F{yellow}-- %d --%f'
-zstyle ':completion:*:messages' format ' %F{purple} -- %d --%f'
+#Mensaje que aparece si no encuentra ninguna opción para completar
 zstyle ':completion:*:warnings' format ' %F{red}-- no matches found --%f'
-zstyle ':completion:*' format ' %F{yellow}-- %d --%f'
+
+#Mensaje que indica el numero de letras que se han corregido al poner mal un comando
+zstyle ':completion:*:corrections' format ' %F{green}-- %d (errors: %e) --%f'
 
 #Permite que aparezcan mensajes de ayuda al darle TAB
 zstyle ':completion:*' group-name ''
