@@ -17,3 +17,8 @@ alias yaycmo="yay -Qqd | yay -Rsu -"    #Clear more orphans
 alias gitig="git clean -dfX"    #Clean ignored files
 alias gitprunemain="git remote prune origin && git branch --merged origin/main | grep -v main | xargs git branch -d"
 alias gitprunemaster="git remote prune origin && git branch --merged origin/master | grep -v master | xargs git branch -d"
+
+
+alias re="source $HOME/.zshrc"
+alias rmzsh="rm -rf $ZSH_CONFIG_DIR $HOME/{.zshrc,.p10k.zsh}"
+alias rmplugins="rm -rf $ZSH_PLUGIN_DIR"
