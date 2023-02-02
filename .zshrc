@@ -7,19 +7,16 @@ fi
 
 export ZSH_CONFIG_DIR="$HOME/.config/zsh"
 
-# Created by newuser for 5.9
-
 #Launch the completer
 autoload -U compinit
 compinit
 
 #source neccesary files
 #EXPERIMENTAL FILE
-source $ZSH_CONFIG_DIR/functions.sh
-
-source $ZSH_CONFIG_DIR/zsh-bindings.zsh
-source $ZSH_CONFIG_DIR/zsh-aliases.zsh
 source $ZSH_CONFIG_DIR/zsh-exports.zsh
+source $ZSH_CONFIG_DIR/functions.sh
+source $ZSH_CONFIG_DIR/zsh-aliases.zsh
+source $ZSH_CONFIG_DIR/zsh-bindings.zsh
 source $ZSH_CONFIG_DIR/zsh-styles.zsh
 
 
