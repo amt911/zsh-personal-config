@@ -15,8 +15,8 @@ alias yaycmo="yay -Qqd | yay -Rsu -"    #Clear more orphans
 
 #git aliases
 alias gitig="git clean -dfX"    #Clean ignored files
-alias gitprunemain="git remote prune origin && git branch --merged origin/main | grep -v main | xargs git branch -d"
-alias gitprunemaster="git remote prune origin && git branch --merged origin/master | grep -v master | xargs git branch -d"
+alias gitprunemain="git remote prune origin && git branch --merged | grep -v main | xargs git branch -d"
+alias gitprunemaster="git remote prune origin && git branch --merged | grep -v master | xargs git branch -d"
 
 
 alias re="source $HOME/.zshrc"
