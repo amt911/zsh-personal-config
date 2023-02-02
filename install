@@ -1,0 +1,3 @@
+#!/bin/zsh
+
+cp --recursive .p10k.zsh .zshrc .config $HOME
