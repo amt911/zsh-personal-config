@@ -12,18 +12,21 @@ NO_COLOR='\033[0m'
 GREEN='\033[0;32m'
 BRIGHT_CYAN='\033[0;96m'
 
+#$1: Plugin's author
+#$2: Plugin name
 source_plugin() {
-    if [ -f "$ZSH_PLUGIN_DIR/$1/$1.plugin.zsh" ]; then
-        source "$ZSH_PLUGIN_DIR/$1/$1.plugin.zsh"
-
-    elif [ -f "$ZSH_PLUGIN_DIR/$1/$1.zsh" ]; then
-        source "$ZSH_PLUGIN_DIR/$1/$1.zsh"
-
+    if [ -f "$ZSH_PLUGIN_DIR/$2/$2.plugin.zsh" ]; then
+        source "$ZSH_PLUGIN_DIR/$2/$2.plugin.zsh"
+        loaded_plugins+=("$1/$2")
+    elif [ -f "$ZSH_PLUGIN_DIR/$2/$2.zsh" ]; then
+        source "$ZSH_PLUGIN_DIR/$2/$2.zsh"
+        loaded_plugins+=("$1/$2")
     #Este ultimo para powerlevel10k
-    elif [ -f "$ZSH_PLUGIN_DIR/$1/$1.zsh-theme" ]; then
-        source "$ZSH_PLUGIN_DIR/$1/$1.zsh-theme"
+    elif [ -f "$ZSH_PLUGIN_DIR/$2/$2.zsh-theme" ]; then
+        source "$ZSH_PLUGIN_DIR/$2/$2.zsh-theme"
+        loaded_plugins+=("$1/$2")
     else
-        echo -e "${RED}Error adding plugin${NO_COLOR} $PLUGIN_NAME"
+        echo -e "${RED}Error adding plugin${NO_COLOR} $2"
     fi
 }
 
@@ -31,6 +34,7 @@ source_plugin() {
 # $1: user/plugin
 # $2: extra git params
 add_plugin() {
+    AUTHOR=$(echo "$1" | cut -d "/" -f 1)
     PLUGIN_NAME=$(echo "$1" | cut -d "/" -f 2)
 
     #Se comprueba si existe el directorio, indicando que se ha descargado
@@ -45,8 +49,13 @@ add_plugin() {
             git clone "$REPO_URL/$1" "$ZSH_PLUGIN_DIR/$PLUGIN_NAME"
         fi
 
+        #Solo en caso de que haya tenido exito el clonado
+        if [ "$?" -eq 0 ]; then
         #Se le añade una marca de tiempo para que cuando pase un tiempo determinado haga pull al plugin indicado
         date +%s >"$ZSH_PLUGIN_DIR/.$PLUGIN_NAME"
+        else
+        echo -e "${RED}Error installing $PLUGIN_NAME${NO_COLOR}"
+        fi
 
     # En caso de haberse pasado esa marca de tiempo, se le hace un pull al plugin para obtener los cambios
     elif [ $(($(date +%s) - $(cat "$ZSH_PLUGIN_DIR/.$PLUGIN_NAME"))) -ge $TIME_THRESHOLD ]; then
@@ -59,7 +68,7 @@ add_plugin() {
         date +%s >"$ZSH_PLUGIN_DIR/.$PLUGIN_NAME"
     fi
 
-    source_plugin "$PLUGIN_NAME"
+    source_plugin "$AUTHOR" "$PLUGIN_NAME"
 }
 
 #\\033\[0;?[0-9]*m to find ansi escape codes
@@ -95,6 +104,11 @@ print_message() {
     printf "\n"    
 }
 
+
+
 update_plugins(){
-    echo "WIP"
+    for i in "${loaded_plugins[@]}"
+    do
+        echo "$i"
+    done
 }
