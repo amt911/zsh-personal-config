@@ -94,3 +94,7 @@ print_message() {
     printf "%0.s$3" $(seq 1 $2)
     printf "\n"    
 }
+
+update_plugins(){
+    echo "WIP"
+}
