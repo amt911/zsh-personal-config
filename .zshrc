@@ -41,7 +41,7 @@ add_plugin "romkatv/powerlevel10k" "--depth=1"
 
 
 #Parser del man para comandos que no lo tienen
-compdef _gnu_generic nvidia-smi grub-install fc-cache userdel passwd
+compdef _gnu_generic nvidia-smi grub-install fc-cache userdel passwd ntfsfix
 
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
