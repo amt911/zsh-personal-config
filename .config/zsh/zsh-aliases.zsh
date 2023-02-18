@@ -15,6 +15,7 @@ alias yaycmo="yay -Qqd | yay -Rsu -"    #Clear more orphans
 
 #git aliases
 alias gitig="git clean -dfX"    #Clean ignored files
+alias gitig2="git rm -rf --cached ."	#Clean ignored files that are present on the repo (when gitignore is added after creation"
 alias gitprunemain="git switch main && git remote prune origin && git branch --merged | grep -v main | xargs git branch -d"
 alias gitprunemaster="git switch master && git remote prune origin && git branch --merged | grep -v master | xargs git branch -d"
 
