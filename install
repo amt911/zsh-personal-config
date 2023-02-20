@@ -2,7 +2,7 @@
 
 # Symlinks MUST have ABSOLUTE PATH
 
-ZSH_REPO_NAME="zsh-personal-config"
+ZSH_REPO_NAME=".zshpc"
 
 # We manually create the folder in order to avoid copying 
 # files to the repo and letting other plugins install on the same folder
