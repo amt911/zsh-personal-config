@@ -1,3 +1,16 @@
 #!/bin/zsh
 
-cp --recursive .p10k.zsh .zshrc .config $HOME
+# Symlinks MUST have ABSOLUTE PATH
+
+ZSH_REPO_NAME="zsh-personal-config"
+
+# We manually create the folder in order to avoid copying 
+# files to the repo and letting other plugins install on the same folder
+mkdir -p "$HOME/.config/zsh"
+
+ln -sf "$HOME/$ZSH_REPO_NAME/.zshrc" "$HOME/.zshrc"
+ln -sf "$HOME/$ZSH_REPO_NAME/.p10k.zsh" "$HOME/.p10k.zsh"
+
+for i in $(ls .config/zsh); do
+    ln -s "$HOME/$ZSH_REPO_NAME/.config/zsh/$i" "$HOME/.config/zsh/$i"
+done
