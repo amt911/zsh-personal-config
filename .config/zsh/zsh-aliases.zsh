@@ -25,3 +25,5 @@ alias rmzsh="rm -rf $ZSH_CONFIG_DIR $HOME/{.zshrc,.p10k.zsh} $ZSH_PLUGIN_DIR"
 alias rmplugins="rm -rf $ZSH_PLUGIN_DIR"
 alias printed="find . -type d -empty -print"
 alias rmed="find . -type d -empty -delete"
+
+alias update_zshpc="git -C $HOME/.zshpc pull"
