@@ -21,7 +21,7 @@ alias gitprunemaster="git switch master && git remote prune origin && git branch
 
 
 alias re="source $HOME/.zshrc"
-alias rmzsh="rm -rf $ZSH_CONFIG_DIR $HOME/{.zshrc,.p10k.zsh}"
+alias rmzsh="rm -rf $ZSH_CONFIG_DIR $HOME/{.zshrc,.p10k.zsh} $ZSH_PLUGIN_DIR"
 alias rmplugins="rm -rf $ZSH_PLUGIN_DIR"
 alias printed="find . -type d -empty -print"
 alias rmed="find . -type d -empty -delete"

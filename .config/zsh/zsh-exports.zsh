@@ -1,6 +1,6 @@
 #!/bin/zsh
 
-export ZSH_PLUGIN_DIR="$ZSH_CONFIG_DIR/plugins"
+export ZSH_PLUGIN_DIR="$HOME/.zsh-plugins"
 
 #TAMAÑO DEL HISTORIAL
 HISTFILE=~/.histfile
