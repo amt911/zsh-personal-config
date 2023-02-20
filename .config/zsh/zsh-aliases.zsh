@@ -12,7 +12,7 @@ alias yaylo="yay -Qtdq"     #List orphans
 alias yayco="yay -Qtdq | yay -Rs -"  #Clear orphans
 alias yaylmo="yay -Qqd | yay -Rsu --print -"    #List more orphans
 alias yaycmo="yay -Qqd | yay -Rsu -"    #Clear more orphans
-
+alias yaylf="yay -Qm"   #List foreign packages
 #git aliases
 alias gitig="git clean -dfX"    #Clean ignored files
 alias gitig2="git rm -rf --cached ."	#Clean ignored files that are present on the repo (when gitignore is added after creation"
