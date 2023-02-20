@@ -5,7 +5,7 @@ alias ls=lsd
 alias tree="lsd --tree"
 alias sudo="sudo "
 alias dd="dd status=progress"
-
+alias cp="cp --reflink=auto"
 #yay aliases
 alias yaycc="yay -Scc"  #Clear cache
 alias yaylo="yay -Qtdq"     #List orphans
