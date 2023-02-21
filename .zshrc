@@ -27,8 +27,8 @@ source $ZSH_CONFIG_DIR/pak_manager.zsh
 
 #Only loads this plugin and fzf's autocompletion if it (fzf) is installed
 if [ $(check_fzf) -eq 0 ]; then
-  source /usr/share/fzf/key-bindings.zsh
-  source /usr/share/fzf/completion.zsh
+  source "$FZF_DIR_FILE_LOC/key-bindings.zsh"
+  source "$FZF_DIR_FILE_LOC/completion.zsh"
 
   add_plugin "Aloxaf/fzf-tab"
 fi
