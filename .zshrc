@@ -14,7 +14,7 @@ compinit
 #source neccesary files
 #EXPERIMENTAL FILE
 source $ZSH_CONFIG_DIR/zsh-exports.zsh
-source $ZSH_CONFIG_DIR/functions.sh
+source $ZSH_CONFIG_DIR/functions.zsh
 source $ZSH_CONFIG_DIR/zsh-aliases.zsh
 source $ZSH_CONFIG_DIR/zsh-bindings.zsh
 source $ZSH_CONFIG_DIR/zsh-styles.zsh
