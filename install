@@ -14,3 +14,6 @@ ln -sf "$HOME/$ZSH_REPO_NAME/.p10k.zsh" "$HOME/.p10k.zsh"
 for i in $(ls $HOME/$ZSH_REPO_NAME/.config/zsh); do
     ln -s "$HOME/$ZSH_REPO_NAME/.config/zsh/$i" "$HOME/.config/zsh/$i"
 done
+
+
+ #/usr/share/doc/fzf/examples/key-bindings.zsh
