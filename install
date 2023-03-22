@@ -11,9 +11,9 @@ mkdir -p "$HOME/.config/zsh"
 ln -sf "$HOME/$ZSH_REPO_NAME/.zshrc" "$HOME/.zshrc"
 ln -sf "$HOME/$ZSH_REPO_NAME/.p10k.zsh" "$HOME/.p10k.zsh"
 
-for i in $(ls $HOME/$ZSH_REPO_NAME/.config/zsh); do
-    ln -s "$HOME/$ZSH_REPO_NAME/.config/zsh/$i" "$HOME/.config/zsh/$i"
+for i in "$HOME"/"$ZSH_REPO_NAME"/.config/zsh/*; do
+    [[ -e "$i" ]] || break
+
+    aux=$(echo "$i" | grep -o "[^/]*$")
+    ln -sf "$i" "$HOME/.config/zsh/$aux"
 done
-
-
- #/usr/share/doc/fzf/examples/key-bindings.zsh

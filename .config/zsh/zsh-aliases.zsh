@@ -18,7 +18,10 @@ alias gitig="git clean -dfX"    #Clean ignored files
 alias gitig2="git rm -rf --cached ."	#Clean ignored files that are present on the repo (when gitignore is added after creation"
 alias gitprunemain="git switch main && git remote prune origin && git branch --merged | grep -v main | xargs git branch -d"
 alias gitprunemaster="git switch master && git remote prune origin && git branch --merged | grep -v master | xargs git branch -d"
-
+alias gss="git status"
+alias ga="git add"
+alias gc="git commit"
+alias gr="git restore"
 
 alias re="source $HOME/.zshrc"
 alias rmzsh="rm -rf $ZSH_CONFIG_DIR $HOME/{.zshrc,.p10k.zsh} $ZSH_PLUGIN_DIR"
