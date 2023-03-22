@@ -110,33 +110,33 @@ print_message() {
     fi
 
     max_length="$2"
-    hashtag_nro=$(((max_length - $msg_length - 2) / 2))
+    hashtag_nro=$(((max_length - msg_length - 2) / 2))
     #echo "hash: $hashtag_nro"
     
     printf "\n"
-    printf "%0.s$3" $(seq 1 $2)
+    printf "%0.s$3" $(seq 1 "$2")
     printf "\n"
-    printf "%0.s$3" $(seq 1 $hashtag_nro)
+    printf "%0.s$3" $(seq 1 "$hashtag_nro")
 
-    if [ $(($msg_length % 2)) -ne 0 ]; then
-        printf " %b  " $1
+    if [ $((msg_length % 2)) -ne 0 ]; then
+        printf " %b  " "$1"
     else
-        printf " %b " $1
+        printf " %b " "$1"
     fi
 
-    printf "%0.s$3" $(seq 1 $hashtag_nro)
+    printf "%0.s$3" $(seq 1 "$hashtag_nro")
     printf "\n"
-    printf "%0.s$3" $(seq 1 $2)
+    printf "%0.s$3" $(seq 1 "$2")
     printf "\n"    
 }
 
 #Lists all loaded plugins
 list_plugins() {
-    cd $ZSH_PLUGIN_DIR || exit
+    cd "$ZSH_PLUGIN_DIR" || exit
     res=$(find . -maxdepth 1 -type f -name ".*" | sed 's/^\.\/\.//')
-    cd $HOME || exit
+    cd "$HOME" || exit
 
-    echo $res
+    echo "$res"
 }
 
 
@@ -152,6 +152,28 @@ update_plugins(){
         for i in "${loaded_plugins[@]}"
         do
             _update_plugin "$i"
+        done    
+
+    else
+        echo -e "${RED}No plugins loaded/installed${NO_COLOR}"
+    fi
+}
+
+
+# date -d @1679524012 "+%d-%m-%Y %H:%M:%S"
+
+check_plugins_update_date() {
+    plugins_list=$(list_plugins)
+
+    if [ "$plugins_list" != "" ]; then
+        #Then we insert them inside an array to iterate over them
+        loaded_plugins=("${(@f)$(list_plugins)}")
+
+        for i in "${loaded_plugins[@]}"
+        do
+            # _update_plugin "$i"
+            next_date=$(cat "$ZSH_PLUGIN_DIR"/."$i")
+            echo -e "${BRIGHT_CYAN}$i:${NO_COLOR} $(date -d @$((next_date+TIME_THRESHOLD)) "+%d-%m-%Y %H:%M:%S")"
         done    
 
     else
