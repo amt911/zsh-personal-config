@@ -30,3 +30,29 @@ check_distro() {
 }
 
 check_distro
+
+
+# Personal scripts rewritten to functions, so they can be called directly
+convert_png_to_jpg() {
+    if [ "$#" -eq 0 ]; then
+        echo "Usage: convert_png_to_jpg <path>"
+    else
+        for f in "$1"/*.png; do
+	        jpg_name=$(echo "$f" | sed "s/.png/.jpg/")
+	        convert "$f" "$jpg_name"
+        done
+    fi
+}
+
+batch_crop() {
+    if [ "$#" -eq 2 ]; then
+        [ ! -d "cropped" ] && mkdir cropped
+        
+        for f in "$1"/*.png; do
+            convert "$f" -crop "$2" "cropped/$f"
+        done
+    else
+        echo "Usage: batch_crop <directory> {x}x{y}{+/-}{x}{+/-}{y}"
+        return 1
+    fi
+}
