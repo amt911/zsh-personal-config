@@ -35,12 +35,38 @@ check_distro
 # Personal scripts rewritten to functions, so they can be called directly
 convert_png_to_jpg() {
     if [ "$#" -eq 0 ]; then
-        echo "Usage: convert_png_to_jpg <path>"
-    else
+        echo "Usage: convert_png_to_jpg [-r] <path>"
+	echo "Example: convert_png_to_jpg ."
+	echo "Example: convert_png_to_jpg -r ."
+    elif [ "$#" -eq 1 ]; then
         for f in "$1"/*.png; do
 	        jpg_name=$(echo "$f" | sed "s/.png/.jpg/")
 	        convert "$f" "$jpg_name"
         done
+    else
+        for f in "$2"/**/*.png; do
+	        jpg_name=$(echo "$f" | sed "s/.png/.jpg/")
+	        convert "$f" "$jpg_name"
+        done
+    fi
+}
+
+batch_resize(){
+    if [ "$#" -eq 2 ]; then
+        [ ! -d "resized" ] && mkdir resized
+        
+        for f in "$1"/*.png; do
+            convert "$f" -sample "$2" "resized/$f"
+        done
+    elif [ "$#" -eq 3 ]; then
+        for f in "$2"/*.png; do
+            convert "$f" -sample "$3" "$f"
+        done
+    else
+        echo "Usage: batch_resize [-f] <directory> <percentage>"
+        echo "Example: batch_resize . 20%"
+        echo "Example: batch_resize -f . 33%"
+        return 1
     fi
 }
 
@@ -58,7 +84,7 @@ batch_crop() {
     else
         echo "Usage: batch_crop [-f] <directory> {x}x{y}{+/-}{x}{+/-}{y}"
         echo "Example: batch_crop . 12x13+1+2"
-        echo "Example: batch_crop -f 33x33"
+        echo "Example: batch_crop -f . 33x33"
         return 1
     fi
 }
