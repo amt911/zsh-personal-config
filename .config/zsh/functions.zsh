@@ -51,8 +51,14 @@ batch_crop() {
         for f in "$1"/*.png; do
             convert "$f" -crop "$2" "cropped/$f"
         done
+    elif [ "$#" -eq 3 ]; then
+        for f in "$2"/*.png; do
+            convert "$f" -crop "$3" "$f"
+        done
     else
-        echo "Usage: batch_crop <directory> {x}x{y}{+/-}{x}{+/-}{y}"
+        echo "Usage: batch_crop [-f] <directory> {x}x{y}{+/-}{x}{+/-}{y}"
+        echo "Example: batch_crop . 12x13+1+2"
+        echo "Example: batch_crop -f 33x33"
         return 1
     fi
 }
