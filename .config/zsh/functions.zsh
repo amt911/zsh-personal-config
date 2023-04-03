@@ -33,20 +33,27 @@ check_distro
 
 
 # Personal scripts rewritten to functions, so they can be called directly
+# REWIRTE THIS FUNCTION SO IT CAN TAKE AN ARBITRARY AMOUNT OF SWITCHES
 convert_png_to_jpg() {
     if [ "$#" -eq 0 ]; then
-        echo "Usage: convert_png_to_jpg [-r] <path>"
+        echo "Usage: convert_png_to_jpg [-r] <quality-number> <path>"
 	echo "Example: convert_png_to_jpg ."
 	echo "Example: convert_png_to_jpg -r ."
+	echo "Example: convert_png_to_jpg -r 33 ."
     elif [ "$#" -eq 1 ]; then
         for f in "$1"/*.png; do
 	        jpg_name=$(echo "$f" | sed "s/.png/.jpg/")
 	        convert "$f" "$jpg_name"
         done
-    else
+    elif [ "$#" -eq 2 ]; then
         for f in "$2"/**/*.png; do
 	        jpg_name=$(echo "$f" | sed "s/.png/.jpg/")
 	        convert "$f" "$jpg_name"
+        done
+    else
+        for f in "$3"/**/*.png; do
+	        jpg_name=$(echo "$f" | sed "s/.png/.jpg/")
+	        convert "$f" -quality "$2" "$jpg_name"
         done
     fi
 }
@@ -56,11 +63,11 @@ batch_resize(){
         [ ! -d "resized" ] && mkdir resized
         
         for f in "$1"/*.png; do
-            convert "$f" -sample "$2" "resized/$f"
+            convert "$f" -resize "$2" -filter Point "resized/$f"
         done
     elif [ "$#" -eq 3 ]; then
         for f in "$2"/*.png; do
-            convert "$f" -sample "$3" "$f"
+            convert "$f" -resize "$3" -filter Point "$f"
         done
     else
         echo "Usage: batch_resize [-f] <directory> <percentage>"
