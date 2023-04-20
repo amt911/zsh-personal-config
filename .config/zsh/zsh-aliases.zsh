@@ -22,7 +22,7 @@ alias gss="git status"
 alias ga="git add"
 alias gc="git commit"
 alias gr="git restore"
-alias grename="git branch -m"
+alias gren="git branch -m"
 
 alias re="source $HOME/.zshrc"
 alias rmzsh="rm -rf $ZSH_CONFIG_DIR $HOME/{.zshrc,.p10k.zsh} $ZSH_PLUGIN_DIR"
