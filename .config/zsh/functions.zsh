@@ -95,3 +95,11 @@ batch_crop() {
         return 1
     fi
 }
+
+shrink_png_lossy() {
+	if [ "$#" -ne 1 ]; then
+		echo "Usage: shrink_png_lossy image(s)"
+	else
+		pngquant --skip-if-larger --force --ext -new.png --quality 0-64 --speed 1 --strip "$1"
+	fi
+}
