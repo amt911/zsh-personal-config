@@ -99,7 +99,8 @@ batch_crop() {
 shrink_png_lossy() {
 	if [ "$#" -ne 2 ]; then
 		echo "Usage: shrink_png_lossy {min-max} {image(s)}"
+		return 1
 	else
-		pngquant --skip-if-larger --force --ext -new.png --quality "$1" --speed 1 --strip "$2"
+		pngquant --skip-if-larger --force --ext "-new.png" --quality "$1" --speed 1 --strip "$2"
 	fi
 }
