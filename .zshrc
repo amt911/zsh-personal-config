@@ -5,7 +5,13 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
+
 export ZSH_CONFIG_DIR="$HOME/.config/zsh"
+export ZSH_PLUGIN_DIR="$HOME/.zsh-plugins"
+
+#source package (plugin) manager
+source $ZSH_CONFIG_DIR/zsh-mgr.zsh
+
 
 #Launch the completer
 autoload -U compinit
@@ -19,9 +25,6 @@ source $ZSH_CONFIG_DIR/zsh-aliases.zsh
 source $ZSH_CONFIG_DIR/zsh-bindings.zsh
 source $ZSH_CONFIG_DIR/zsh-styles.zsh
 
-
-#source package (plugin) manager
-source $ZSH_CONFIG_DIR/pak_manager.zsh
 
 #Plugins
 

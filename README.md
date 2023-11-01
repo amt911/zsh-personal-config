@@ -32,9 +32,9 @@ In order to update the repository, you can do it with the following command:
 update_zshpc
 ```
 
-## Plugin manager (pak_manager)
+## Plugin manager (zsh-mgr)
 
-My plugin manager (named "pak_manager") is a very primitive and very lightly tested plugin manager. The most notable feature is that it updates plugins every week automatically.
+My plugin manager (named "zsh-mgr") is a very primitive and very lightly tested plugin manager. The most notable feature is that it updates plugins every week automatically.
 
 In order to add a plugin, you can do it like this:
 

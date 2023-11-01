@@ -1,9 +1,9 @@
 #!/bin/zsh
 
-REPO_URL="https://github.com"
+export REPO_URL="https://github.com"
 
 # Time threshold
-TIME_THRESHOLD=604800    # 1 week in seconds
+export TIME_THRESHOLD=604800    # 1 week in seconds
 # TIME_THRESHOLD=10 # 20 hours in seconds
 
 # Colors

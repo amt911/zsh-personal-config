@@ -1,7 +1,5 @@
 #!/bin/zsh
 
-export ZSH_PLUGIN_DIR="$HOME/.zsh-plugins"
-
 #TAMAÑO DEL HISTORIAL
 HISTFILE=~/.histfile
 HISTSIZE=100000
