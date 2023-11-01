@@ -57,4 +57,4 @@ update_plugins
 
 ## Finding bugs
 
-If you encounter a bug, please open an issue so I can take it a look.
+If you encounter a bug, please open an issue or create a pull request to solve it.
