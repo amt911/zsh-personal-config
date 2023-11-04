@@ -11,7 +11,7 @@ This is my personal zsh config. It includes the following:
 Use the following command to clone the repository and install the files;
 
 ```console
-git clone git@github.com:amt911/zsh-personal-config.git "$HOME/.zshpc" && $HOME/.zshpc/install
+git clone git@github.com:amt911/zsh-personal-config.git "$HOME/.zshpc" && $HOME/.zshpc/install.zsh
 ```
 
 Alternatively, you can run both commands separately, like this:
@@ -21,7 +21,7 @@ git clone git@github.com:amt911/zsh-personal-config.git "$HOME/.zshpc"
 ```
 
 ```console
-$HOME/.zshpc/install
+$HOME/.zshpc/install.zsh
 ```
 
 ## Updating
