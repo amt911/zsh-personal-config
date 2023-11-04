@@ -34,7 +34,7 @@ update_zshpc
 
 ## Plugin manager (zsh-mgr)
 
-My plugin manager (named "zsh-mgr") is a very primitive and very lightly tested plugin manager. The most notable feature is that it updates plugins every week automatically.
+This configuration uses [zsh-mgr](https://github.com/amt911/zsh-mgr) as the plugin manager. It auto-updates the plugins every week.
 
 In order to add a plugin, you can do it like this:
 
