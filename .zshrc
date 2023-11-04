@@ -9,26 +9,24 @@ fi
 export ZSH_CONFIG_DIR="$HOME/.config/zsh"
 export ZSH_PLUGIN_DIR="$HOME/.zsh-plugins"
 
-#source package (plugin) manager
+# Source package (plugin) manager
 source $ZSH_CONFIG_DIR/zsh-mgr/zsh-mgr.zsh
 
 
-#Launch the completer
+# Launch the completer
 autoload -U compinit
 compinit
 
-#source neccesary files
-#EXPERIMENTAL FILE
+# Source neccesary files
 source $ZSH_CONFIG_DIR/zsh-exports.zsh
 source $ZSH_CONFIG_DIR/functions.zsh
 source $ZSH_CONFIG_DIR/zsh-aliases.zsh
 source $ZSH_CONFIG_DIR/zsh-bindings.zsh
 source $ZSH_CONFIG_DIR/zsh-styles.zsh
 
+# Plugins
 
-#Plugins
-
-#Only loads this plugin and fzf's autocompletion if it (fzf) is installed
+# Only loads this plugin and fzf's autocompletion if it (fzf) is installed
 if [ $(check_fzf) -eq 0 ]; then
   source "$FZF_DIR_FILE_LOC/key-bindings.zsh"
   source "$FZF_DIR_FILE_LOC/completion.zsh"
@@ -43,7 +41,7 @@ add_plugin "zsh-users/zsh-completions"
 add_plugin "romkatv/powerlevel10k" "--depth=1"
 
 
-#Parser del man para comandos que no lo tienen
+# Man parser for tab completion on unsupported commands
 compdef _gnu_generic nvidia-smi grub-install fc-cache userdel passwd ntfsfix fdupes
 
 
