@@ -10,7 +10,7 @@ export ZSH_CONFIG_DIR="$HOME/.config/zsh"
 export ZSH_PLUGIN_DIR="$HOME/.zsh-plugins"
 
 #source package (plugin) manager
-source $ZSH_CONFIG_DIR/zsh-mgr.zsh
+source $ZSH_CONFIG_DIR/zsh-mgr/zsh-mgr.zsh
 
 
 #Launch the completer
