@@ -19,7 +19,7 @@ compinit
 
 # Source neccesary files
 source $ZSH_CONFIG_DIR/zsh-exports.zsh
-source $ZSH_CONFIG_DIR/functions.zsh
+source $ZSH_CONFIG_DIR/zsh-functions.zsh
 source $ZSH_CONFIG_DIR/zsh-aliases.zsh
 source $ZSH_CONFIG_DIR/zsh-bindings.zsh
 source $ZSH_CONFIG_DIR/zsh-styles.zsh

@@ -104,3 +104,29 @@ shrink_png_lossy() {
 		pngquant --skip-if-larger --force --ext "-new.png" --quality "$1" --speed 1 --strip "$2"
 	fi
 }
+
+
+# update_zshpc(){
+#     git -C "$HOME/.zshpc" pull
+# }
+
+# Updates the plugin manager to the latest main commit.
+update_zshpc(){
+    local -r RAW_MSG="Updating personal config"     # Raw message to count character length
+    local -r MSG="Updating ${GREEN}personal config${NO_COLOR}"      # Message formatted with colors
+
+    print_message "$MSG" "$((COLUMNS - 4))" "$BRIGHT_CYAN#$NO_COLOR" "${#RAW_MSG}"
+
+    if ! git -C "$HOME/.zshpc" pull; then
+        local -r RAW_ERR_MSG="Error updating personal config"
+        local -r ERR_MSG="${RED}Error updating personal config${NO_COLOR}"
+
+        print_message "$ERR_MSG" "$((COLUMNS - 4))" "$RED#$NO_COLOR" "${#RAW_ERR_MSG}"
+
+        return 1
+    fi
+
+    date +%s > "$ZSH_PLUGIN_DIR/.zshpc"
+
+    return 0
+}
