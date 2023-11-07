@@ -1,5 +1,13 @@
 #!/bin/zsh
 
+if [ "$ZSH_STYLES_ZSH" != yes ]; then
+    ZSH_STYLES_ZSH=yes
+    echo "no sourceado"
+else
+    echo "sourceado"
+    return 0
+fi 
+
 
 #If fzf is installed, it continues with its config
 if [ $(check_fzf) -eq 0 ]; then

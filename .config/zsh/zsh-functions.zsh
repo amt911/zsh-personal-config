@@ -1,5 +1,13 @@
 #!/bin/zsh
 
+if [ "$ZSH_FUNCTIONS_ZSHPC" != yes ]; then
+    ZSH_FUNCTIONS_ZSHPC=yes
+    echo "no sourceado"
+else
+    echo "sourceado"
+    return 0
+fi 
+
 #Checks wether fzf is installed and prints the return value to stdout
 check_fzf() {
     which fzf >/dev/null
@@ -130,3 +138,19 @@ update_zshpc(){
 
     return 0
 }
+
+
+export ZSHPC_TIME_THRESHOLD=10
+
+# Auto-updates the manager when a week has passed
+_auto_updater_zshpc(){
+    if [ ! -f "$ZSH_PLUGIN_DIR/.zshpc" ]; then
+        date +%s > "$ZSH_PLUGIN_DIR/.zshpc"
+    fi
+    
+    if [ $(($(date +%s) - $(cat "$ZSH_PLUGIN_DIR/.zshpc"))) -ge $ZSHPC_TIME_THRESHOLD ]; then
+        update_zshpc
+    fi
+}
+
+_auto_updater_zshpc

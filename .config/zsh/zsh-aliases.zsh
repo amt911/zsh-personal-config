@@ -1,5 +1,13 @@
 #!/bin/zsh
 
+if [ "$ZSH_ALIASES_ZSH" != yes ]; then
+    ZSH_ALIASES_ZSH=yes
+    echo "no sourceado"
+else
+    echo "sourceado"
+    return 0
+fi 
+
 # Zona para los alias
 alias ls=lsd
 alias tree="lsd --tree"
