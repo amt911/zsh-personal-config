@@ -1,5 +1,11 @@
 #!/bin/zsh
 
+if [ "$ZSH_BINDINGS_ZSH" != yes ]; then
+    ZSH_BINDINGS_ZSH=yes
+else
+    return 0
+fi 
+
 bindkey '^[[A' history-substring-search-up
 bindkey '^[[B' history-substring-search-down
 bindkey '^[[1;5C' forward-word

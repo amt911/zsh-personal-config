@@ -6,7 +6,7 @@
 # ZSH_REPO_PATH=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
 # zsh version
-ZSH_REPO_PATH="$( cd -- "$( dirname -- "${(%):-%x}" )" &> /dev/null && pwd )"
+readonly ZSH_REPO_PATH="$( cd -- "$( dirname -- "${(%):-%x}" )" &> /dev/null && pwd )"
 
 # We manually create the folder in order to avoid copying 
 # files to the repo and letting other plugins install on the same folder

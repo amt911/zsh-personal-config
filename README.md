@@ -32,6 +32,8 @@ In order to update the repository, you can do it with the following command:
 update_zshpc
 ```
 
+It will update this repository and the plugin manager.
+
 ## Plugin manager (zsh-mgr)
 
 This configuration uses [zsh-mgr](https://github.com/amt911/zsh-mgr) as the plugin manager. It auto-updates the plugins every week.

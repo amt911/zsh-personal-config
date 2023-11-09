@@ -1,5 +1,11 @@
 #!/bin/zsh
 
+if [ "$ZSH_EXPORTS_ZSH" != yes ]; then
+    ZSH_EXPORTS_ZSH=yes
+else
+    return 0
+fi 
+
 #TAMAÑO DEL HISTORIAL
 HISTFILE=~/.histfile
 HISTSIZE=100000
