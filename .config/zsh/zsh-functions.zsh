@@ -2,11 +2,12 @@
 
 if [ "$ZSH_FUNCTIONS_ZSHPC" != yes ]; then
     ZSH_FUNCTIONS_ZSHPC=yes
-    echo "no sourceado"
 else
-    echo "sourceado"
     return 0
 fi 
+
+source "$ZSH_CONFIG_DIR/zsh-mgr/generic-auto-updater.zsh"
+source "$ZSH_CONFIG_DIR/zsh-mgr/zsh-mgr.zsh"
 
 #Checks wether fzf is installed and prints the return value to stdout
 check_fzf() {
@@ -37,9 +38,6 @@ check_distro() {
     # echo $FZF_DIR_FILE_LOC 
 }
 
-check_distro
-
-
 # Personal scripts rewritten to functions, so they can be called directly
 # REWIRTE THIS FUNCTION SO IT CAN TAKE AN ARBITRARY AMOUNT OF SWITCHES
 convert_png_to_jpg() {
@@ -50,17 +48,17 @@ convert_png_to_jpg() {
 	echo "Example: convert_png_to_jpg -r 33 ."
     elif [ "$#" -eq 1 ]; then
         for f in "$1"/*.png; do
-	        jpg_name=$(echo "$f" | sed "s/.png/.jpg/")
+	        jpg_name=${f/%.png/.jpg}
 	        convert "$f" "$jpg_name"
         done
     elif [ "$#" -eq 2 ]; then
         for f in "$2"/**/*.png; do
-	        jpg_name=$(echo "$f" | sed "s/.png/.jpg/")
+	        jpg_name=${f/%.png/.jpg}
 	        convert "$f" "$jpg_name"
         done
     else
         for f in "$3"/**/*.png; do
-	        jpg_name=$(echo "$f" | sed "s/.png/.jpg/")
+	        jpg_name=${f/%.png/.jpg}
 	        convert "$f" -quality "$2" "$jpg_name"
         done
     fi
@@ -113,44 +111,22 @@ shrink_png_lossy() {
 	fi
 }
 
-
-# update_zshpc(){
-#     git -C "$HOME/.zshpc" pull
-# }
-
 # Updates the plugin manager to the latest main commit.
 update_zshpc(){
-    local -r RAW_MSG="Updating personal config"     # Raw message to count character length
-    local -r MSG="Updating ${GREEN}personal config${NO_COLOR}"      # Message formatted with colors
-
-    print_message "$MSG" "$((COLUMNS - 4))" "$BRIGHT_CYAN#$NO_COLOR" "${#RAW_MSG}"
-
-    if ! git -C "$HOME/.zshpc" pull; then
-        local -r RAW_ERR_MSG="Error updating personal config"
-        local -r ERR_MSG="${RED}Error updating personal config${NO_COLOR}"
-
-        print_message "$ERR_MSG" "$((COLUMNS - 4))" "$RED#$NO_COLOR" "${#RAW_ERR_MSG}"
-
-        return 1
-    fi
-
-    date +%s > "$ZSH_PLUGIN_DIR/.zshpc"
-
-    return 0
+    _generic_updater "personal config" "$HOME/.zshpc"
+    update_mgr
 }
 
 
-export ZSHPC_TIME_THRESHOLD=10
+export ZSHPC_TIME_THRESHOLD=604800    # 1 week in seconds
+# export ZSHPC_TIME_THRESHOLD=10    # 1 week in seconds
 
-# Auto-updates the manager when a week has passed
+# Auto-updates the personal config
 _auto_updater_zshpc(){
-    if [ ! -f "$ZSH_PLUGIN_DIR/.zshpc" ]; then
-        date +%s > "$ZSH_PLUGIN_DIR/.zshpc"
-    fi
-    
-    if [ $(($(date +%s) - $(cat "$ZSH_PLUGIN_DIR/.zshpc"))) -ge $ZSHPC_TIME_THRESHOLD ]; then
-        update_zshpc
-    fi
+    _generic_auto_updater "personal config" "$HOME/.zshpc" "$ZSHPC_TIME_THRESHOLD"
 }
 
+
+
+check_distro
 _auto_updater_zshpc

@@ -2,9 +2,7 @@
 
 if [ "$ZSH_BINDINGS_ZSH" != yes ]; then
     ZSH_BINDINGS_ZSH=yes
-    echo "no sourceado"
 else
-    echo "sourceado"
     return 0
 fi 
 

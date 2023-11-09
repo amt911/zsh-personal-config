@@ -2,9 +2,7 @@
 
 if [ "$ZSH_EXPORTS_ZSH" != yes ]; then
     ZSH_EXPORTS_ZSH=yes
-    echo "no sourceado"
 else
-    echo "sourceado"
     return 0
 fi 
 
