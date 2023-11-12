@@ -42,7 +42,7 @@ add_plugin "romkatv/powerlevel10k" "--depth=1"
 
 
 # Man parser for tab completion on unsupported commands
-compdef _gnu_generic nvidia-smi grub-install fc-cache userdel passwd ntfsfix fdupes
+compdef _gnu_generic nvidia-smi grub-install fc-cache userdel passwd ntfsfix fdupes bc test
 
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
