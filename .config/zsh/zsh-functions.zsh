@@ -126,7 +126,18 @@ _auto_updater_zshpc(){
     _generic_auto_updater "personal config" "$HOME/.zshpc" "$ZSHPC_TIME_THRESHOLD"
 }
 
+# $1 (Optional yes/no): Display legend?
+check_zshpc_update_date(){
+    _check_comp_update_date "zshpc" "$HOME/.zshpc" "$ZSHPC_TIME_THRESHOLD" "Repo name#Next update" "${GREEN}" "${1:-yes}"
+}
 
+# $1 (Optional yes/no): Display legend? Default: yes
+ck_all(){
+    check_zshpc_update_date no
+    ck_mgr_plugin no
+
+    [ "${1:-yes}" = "yes" ] && _display_color_legend    
+}
 
 check_distro
 _auto_updater_zshpc

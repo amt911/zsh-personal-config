@@ -56,6 +56,26 @@ There is also a manual updater in order to check for updates. The command is:
 update_plugins
 ```
 
+To see the plugins, zsh-mgr and zshpc update date, input the following command:
+
+```console
+ck_all
+```
+
+## Dependencies
+
+This repository depends on the following packages:
+
+- bc
+- sed
+- fzf
+- lsd
+- awk
+- cut
+- date
+- git
+- echo
+- zsh
 
 ## Finding bugs
 
