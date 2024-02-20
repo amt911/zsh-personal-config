@@ -16,9 +16,11 @@ mkdir -p "$HOME/.zsh-plugins"
 ln -sf "$ZSH_REPO_PATH/.zshrc" "$HOME/.zshrc"
 ln -sf "$ZSH_REPO_PATH/.p10k.zsh" "$HOME/.p10k.zsh"
 
+local i
 for i in "$ZSH_REPO_PATH"/.config/zsh/*; do
     [[ -e "$i" ]] || break
 
     aux=$(echo "$i" | grep -o "[^/]*$")
     ln -sf "$i" "$HOME/.config/zsh/$aux"
 done
+unset i
