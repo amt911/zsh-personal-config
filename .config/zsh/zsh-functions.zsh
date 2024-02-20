@@ -43,14 +43,19 @@ check_distro() {
 convert_png_to_jpg() {
     if [ "$#" -eq 0 ]; then
         echo "Usage: convert_png_to_jpg [-r] <quality-number> <path>"
-	echo "Example: convert_png_to_jpg ."
-	echo "Example: convert_png_to_jpg -r ."
-	echo "Example: convert_png_to_jpg -r 33 ."
-    elif [ "$#" -eq 1 ]; then
+        echo "Example: convert_png_to_jpg ."
+        echo "Example: convert_png_to_jpg -r ."
+        echo "Example: convert_png_to_jpg -r 33 ."
+        return 1
+    fi
+
+    local f
+    if [ "$#" -eq 1 ]; then
         for f in "$1"/*.png; do
 	        jpg_name=${f/%.png/.jpg}
 	        convert "$f" "$jpg_name"
         done
+
     elif [ "$#" -eq 2 ]; then
         for f in "$2"/**/*.png; do
 	        jpg_name=${f/%.png/.jpg}
@@ -62,6 +67,7 @@ convert_png_to_jpg() {
 	        convert "$f" -quality "$2" "$jpg_name"
         done
     fi
+    unset f
 }
 
 batch_resize(){
