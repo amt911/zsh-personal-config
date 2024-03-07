@@ -6,10 +6,19 @@ else
     return 0
 fi 
 
+source "$ZSH_CONFIG_DIR/zshpc-functions.zsh"
+
 # Zona para los alias
-alias ls=lsd
-alias tree="lsd --tree"
+if check_cmd_exists "lsd";
+then
+    alias ls=lsd
+    alias tree="lsd --tree"
+fi
+
+# This is to expand other aliases
 alias sudo="sudo "
+
+
 alias dd="dd status=progress"
 alias cp="cp --reflink=auto"
 
@@ -32,8 +41,13 @@ alias gr="git restore"
 alias gren="git branch -m"
 alias gm="git merge --no-ff"
 
+# Remove config aliases
 alias re="source $HOME/.zshrc"
 alias rmzsh="rm -rf $ZSH_CONFIG_DIR $HOME/{.zshrc,.p10k.zsh} $ZSH_PLUGIN_DIR"
 alias rmplugins="rm -rf $ZSH_PLUGIN_DIR"
+
+# Print empty directories
 alias printed="find . -type d -empty -print"
+
+# Remove empty directories
 alias rmed="find . -type d -empty -delete"

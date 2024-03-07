@@ -11,7 +11,7 @@ HISTFILE=~/.histfile
 HISTSIZE=100000
 SAVEHIST=100000
 
-#Para colorizar el manual (que yo sepa, seguramente tenga mas usos)
+# Para colorizar el manual (que yo sepa, seguramente tenga mas usos)
 # Extraido de Prezto, en el modulo environment
 zmodload zsh/termcap
 export LESS_TERMCAP_mb=$'\E[01;31m'      # Begins blinking.
@@ -36,6 +36,10 @@ setopt HIST_VERIFY               # Do not execute immediately upon history expan
 setopt HIST_BEEP                 # Beep when accessing non-existent history.
 
 export FZF_DIR_FILE_LOC="/usr/share/fzf/"       # Arch Linux location by default
+
+export ZSHPC_TIME_THRESHOLD=604800    # 1 week in seconds
+export TIME_THRESHOLD=604800        # 1 week in seconds
+export MGR_TIME_THRESHOLD=604800    # 1 week in seconds
 
 
 # Modificación del framework Prezto, cambiando el color de los directorios y de los programas

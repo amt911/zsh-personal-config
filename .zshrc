@@ -19,7 +19,7 @@ compinit
 
 # Source neccesary files
 source $ZSH_CONFIG_DIR/zsh-exports.zsh
-source $ZSH_CONFIG_DIR/zsh-functions.zsh
+source $ZSH_CONFIG_DIR/zshpc-functions.zsh
 source $ZSH_CONFIG_DIR/zsh-aliases.zsh
 source $ZSH_CONFIG_DIR/zsh-bindings.zsh
 source $ZSH_CONFIG_DIR/zsh-styles.zsh
@@ -27,7 +27,7 @@ source $ZSH_CONFIG_DIR/zsh-styles.zsh
 # Plugins
 
 # Only loads this plugin and fzf's autocompletion if it (fzf) is installed
-if [ $(check_fzf) -eq 0 ]; then
+if check_cmd_exists "fzf"; then
   source "$FZF_DIR_FILE_LOC/key-bindings.zsh"
   source "$FZF_DIR_FILE_LOC/completion.zsh"
 
@@ -39,11 +39,11 @@ add_plugin "zsh-users/zsh-history-substring-search"
 add_plugin "zdharma-continuum/fast-syntax-highlighting"
 add_plugin "zsh-users/zsh-completions"
 add_plugin "romkatv/powerlevel10k" "--depth=1"
+add_plugin "amt911/zsh-useful-functions"
 
 
 # Man parser for tab completion on unsupported commands
 compdef _gnu_generic nvidia-smi grub-install fc-cache userdel passwd ntfsfix fdupes bc test
-
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
