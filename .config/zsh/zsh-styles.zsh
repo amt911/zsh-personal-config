@@ -6,6 +6,7 @@ else
     return 0
 fi 
 
+source "$ZSH_CONFIG_DIR/zsh-mgr/zsh-mgr-common-functions.zsh"
 
 #If fzf is installed, it continues with its config
 if check_cmd_exists "lsd"; then

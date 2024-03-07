@@ -7,6 +7,7 @@ else
 fi 
 
 source "$ZSH_CONFIG_DIR/zshpc-functions.zsh"
+source "$ZSH_CONFIG_DIR/zsh-mgr/zsh-mgr-common-functions.zsh"
 
 # Zona para los alias
 if check_cmd_exists "lsd";
