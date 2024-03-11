@@ -39,7 +39,7 @@ add_plugin "zsh-users/zsh-history-substring-search"
 add_plugin "zdharma-continuum/fast-syntax-highlighting"
 add_plugin "zsh-users/zsh-completions"
 add_plugin "romkatv/powerlevel10k" "--depth=1"
-add_plugin "git@github.com:amt911/zsh-useful-functions.git"
+add_plugin_private "amt911/zsh-useful-functions"
 
 
 # Man parser for tab completion on unsupported commands
