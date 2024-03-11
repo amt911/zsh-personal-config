@@ -41,6 +41,7 @@ export ZSHPC_TIME_THRESHOLD=604800    # 1 week in seconds
 export TIME_THRESHOLD=604800        # 1 week in seconds
 export MGR_TIME_THRESHOLD=604800    # 1 week in seconds
 
+export ZSH_PLUGIN_DIR="$HOME/.zsh-plugins"
 
 # Modificación del framework Prezto, cambiando el color de los directorios y de los programas
 export LS_COLORS=${LS_COLORS:-'di=01;94:ln=35:so=32:pi=33:ex=93:bd=36;01:cd=33;01:su=31;40;07:sg=36;40;07:tw=32;40;07:ow=33;40;07:'}

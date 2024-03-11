@@ -5,24 +5,14 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-
-export ZSH_CONFIG_DIR="$HOME/.config/zsh"
-export ZSH_PLUGIN_DIR="$HOME/.zsh-plugins"
-
-# Source package (plugin) manager
-source $ZSH_CONFIG_DIR/zsh-mgr/zsh-mgr.zsh
-
-
 # Launch the completer
 autoload -U compinit
 compinit
 
-# Source neccesary files
-source $ZSH_CONFIG_DIR/zsh-exports.zsh
-source $ZSH_CONFIG_DIR/zshpc-functions.zsh
-source $ZSH_CONFIG_DIR/zsh-aliases.zsh
-source $ZSH_CONFIG_DIR/zsh-bindings.zsh
-source $ZSH_CONFIG_DIR/zsh-styles.zsh
+export ZSH_CONFIG_DIR="$HOME/.config/zsh"
+
+# Source all scripts
+source $ZSH_CONFIG_DIR/zsh-sources.zsh
 
 # Plugins
 

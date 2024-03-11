@@ -16,4 +16,5 @@ mkdir -p "$HOME/.zsh-plugins"
 ln -sf "$ZSH_REPO_PATH/.zshrc" "$HOME/.zshrc"
 ln -sf "$ZSH_REPO_PATH/.p10k.zsh" "$HOME/.p10k.zsh"
 
+mkdir -p "$HOME/.config"
 ln -sf "$ZSH_REPO_PATH/.config/zsh" "$HOME/.config/zsh"
