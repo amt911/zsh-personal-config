@@ -93,4 +93,4 @@ This repository depends on the following packages:
 
 ## Finding bugs
 
-If you encounter a bug, please open an issue or create a pull request to solve it.
+If you encounter a bug, please open an issue or create a pull request to solve it. I can speak both spanish and english.
