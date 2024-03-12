@@ -2,9 +2,9 @@
 
 This is my personal zsh config. It includes the following:
 
-- Some default plugins that I like.
-- A very primitive plugin manager.
-- Some aliases and styles (including man coloring). Some of these styles are extracted from Prezto.
+- Some plugins that I like.
+- My own plugin manager [zsh-mgr](https://github.com/amt911/zsh-mgr)
+- Some aliases and styles (including man coloring). Some of these styles are extracted from [Prezto](https://github.com/sorin-ionescu/prezto).
 
 ## Installation
 
@@ -42,17 +42,27 @@ It will update this repository and the plugin manager.
 
 This configuration uses [zsh-mgr](https://github.com/amt911/zsh-mgr) as the plugin manager. It auto-updates the plugins every week.
 
-In order to add a plugin, you can do it like this:
+The following examples are also included in ```zsh-mgr```:
+
+To add a plugin, you can do it like this:
 
 ```
 add_plugin "author/plugin-name"
 ```
 
-And if you need extra git flags, you can do it like this other way:
+If you need extra git flags, you can do it like this other way:
 
 ```
 add_plugin "author/plugin-name" "--flag1 --flag2"
 ```
+
+To add a plugin from a private repo, you need to write:
+
+```
+add_plugin_private "author/plugin-name"
+```
+
+```add_plugin_private``` also supports optional flags, like ```add_plugin```.
 
 There is also a manual updater in order to check for updates. The command is:
 
