@@ -80,9 +80,9 @@ ck_all
 
 This repository depends on the following packages:
 
-- bc
+- bc (optional)
 - sed
-- fzf
+- fzf (optional)
 - lsd
 - awk
 - cut
@@ -93,4 +93,4 @@ This repository depends on the following packages:
 
 ## Finding bugs
 
-If you encounter a bug, please open an issue or create a pull request to solve it. I can speak both spanish and english.
+If you encounter a bug, please open an issue or create a pull request to solve it. I speak both spanish and english.
