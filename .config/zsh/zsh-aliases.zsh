@@ -52,3 +52,7 @@ alias printed="find . -type d -empty -print"
 
 # Remove empty directories
 alias rmed="find . -type d -empty -delete"
+
+# rsync aliases
+rsync_diff_upd_times_dry="rsync -rlpgoDcvn --delete"
+rsync_diff_upd_times="rsync -rlpgoDcv --delete"
