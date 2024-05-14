@@ -41,6 +41,7 @@ alias gc="git commit"
 alias gr="git restore"
 alias gren="git branch -m"
 alias gm="git merge --no-ff"
+alias lgit="lazygit"
 
 # Remove config aliases
 alias re="source $HOME/.zshrc"
