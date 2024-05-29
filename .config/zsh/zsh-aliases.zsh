@@ -57,3 +57,6 @@ alias rmed="find . -type d -empty -delete"
 # rsync aliases
 alias rsync_diff_upd_times_dry="rsync -rlpgoDcvn --delete"
 alias rsync_diff_upd_times="rsync -rlpgoDcv --delete"
+
+# LATEX Tools aliases
+alias latexmkpdf="latexmk -synctex=1 -interaction=nonstopmode -file-line-error -pdf"
