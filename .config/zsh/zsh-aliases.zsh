@@ -31,6 +31,8 @@ alias yaylmo="yay -Qqd | yay -Rsu --print -"    #List more orphans
 alias yaycmo="yay -Qqd | yay -Rsu -"    #Clear more orphans
 alias yaylf="yay -Qm"   #List foreign packages
 alias yayrmf="yay -Rdds"    # Forces remove a package BREAKING the system
+alias yay-broken-deps="yay -Dk"     # Checks for broken dependencies
+
 
 # git aliases
 alias gitig="git clean -dfX"    #Clean ignored files
