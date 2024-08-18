@@ -28,6 +28,15 @@ git -C "$HOME/.zshpc" submodule foreach --recursive git checkout main
 $HOME/.zshpc/install.zsh
 ```
 
+### Installing ```zsh-personal-config``` with alternative terminal theme
+
+There is an alternative theme which can be used in place of the default one. To install it, just use the following command, which is the same as the other, but passing to the installation script an additional argument:
+
+```console
+git clone --recurse-submodules https://github.com/amt911/zsh-personal-config.git "$HOME/.zshpc" && git -C "$HOME/.zshpc" submodule foreach --recursive git checkout main && $HOME/.zshpc/install.zsh rainbow
+```
+
+
 ## Updating
 
 In order to update the repository, you can do it with the following command:
