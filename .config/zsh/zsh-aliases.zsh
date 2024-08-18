@@ -67,3 +67,4 @@ alias latexmkpdf="latexmk -synctex=1 -interaction=nonstopmode -file-line-error -
 
 # Misc aliases
 alias eject_hdd="udisksctl power-off -b"
+alias file_mgr_tui="yazi"
