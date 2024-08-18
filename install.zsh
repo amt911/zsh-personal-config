@@ -12,7 +12,7 @@ readonly ZSH_REPO_PATH="$( cd -- "$( dirname -- "${(%):-%x}" )" &> /dev/null && 
 readonly P10K_VARIANT=${1:-"lean"}
 p10k_file_name=".p10k.zsh"
 
-[ "$P10K_VARIANT" -eq "rainbow" ] && p10k_file_name=".p10k.zsh_ALT"
+[ "$P10K_VARIANT" = "rainbow" ] && p10k_file_name=".p10k.zsh_ALT"
 
 
 # We manually create the folder in order to avoid copying 
