@@ -19,6 +19,7 @@ fi
 # This is to expand other aliases
 alias sudo="sudo "
 alias run0="run0 "
+alias watch="watch "
 
 alias dd="dd status=progress"
 alias cp="cp --reflink=auto"
