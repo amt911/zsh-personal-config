@@ -32,7 +32,7 @@ alias yaylmo="yay -Qqd | yay -Rsu --print -"    #List more orphans
 alias yaycmo="yay -Qqd | yay -Rsu -"    #Clear more orphans
 alias yaylf="yay -Qm"   #List foreign packages
 alias yayrmf="yay -Rdds"    # Forces remove a package BREAKING the system
-alias yay-broken-deps="yay -Dk"     # Checks for broken dependencies
+alias yay-broken-deps="yay -Dk && yay -T"     # Checks for broken dependencies (https://www.reddit.com/r/archlinux/comments/vrbsg8/pacman_deps_check/)
 
 
 # git aliases
