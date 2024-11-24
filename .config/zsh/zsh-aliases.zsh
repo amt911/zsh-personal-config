@@ -48,6 +48,7 @@ alias gren="git branch -m"
 alias gm="git merge --no-ff"
 alias lgit="lazygit"
 alias gbm='git branch -r --merged | grep -Ev "(^\*|^\+|master|main|dev)"'
+alias gprune='git remote prune origin'
 
 # Remove config aliases
 alias re="source $HOME/.zshrc"
