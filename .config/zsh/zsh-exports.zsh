@@ -48,7 +48,7 @@ setopt HIST_IGNORE_SPACE         # Do not store commands if they start with the 
 export FZF_DIR_FILE_LOC="/usr/share/fzf/"       # Arch Linux location by default
 
 export ZSHPC_TIME_THRESHOLD=604800    # 1 week in seconds
-export TIME_THRESHOLD=604800        # 1 week in seconds
+export TIME_THRESHOLD=10        # 1 week in seconds
 export MGR_TIME_THRESHOLD=604800    # 1 week in seconds
 
 export ZSH_PLUGIN_DIR="$HOME/.zsh-plugins"

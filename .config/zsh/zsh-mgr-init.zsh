@@ -1,6 +1,7 @@
 #!/bin/zsh
 
-# zsh-mgr-init.zsh - Initialize the Rust-based zsh-mgr
+# zsh-mgr-init.zsh - Auto-load plugins and manage updates automatically
+# Part of zsh-mgr: A Rust-based ZSH plugin manager
 
 if [ "$ZSH_MGR_INIT" != yes ]; then
     ZSH_MGR_INIT=yes
@@ -28,8 +29,8 @@ if ! command -v zsh-mgr &> /dev/null; then
     return 1
 fi
 
-# Function to load a specific plugin
-load_plugin() {
+# Function to intelligently load a plugin
+_load_plugin() {
     local plugin_name="$1"
     local plugin_dir
     
@@ -38,57 +39,151 @@ load_plugin() {
         plugin_dir="$ZSH_PLUGIN_DIR/$plugin_name"
     else
         # Check nested structure (user/repo) - using find to avoid glob expansion issues
-        local found_dir=$(find "$ZSH_PLUGIN_DIR" -maxdepth 2 -type d -name "$plugin_name" | head -n 1)
+        local found_dir=$(find "$ZSH_PLUGIN_DIR" -maxdepth 2 -type d -name "$plugin_name" 2>/dev/null | head -n 1)
         if [ -n "$found_dir" ]; then
             plugin_dir="$found_dir"
         fi
     fi
     
     if [ -z "$plugin_dir" ]; then
-        echo "${RED}Error: Plugin '$plugin_name' not found in $ZSH_PLUGIN_DIR${NO_COLOR}"
+        echo "${RED}Error: Plugin '$plugin_name' not found in $ZSH_PLUGIN_DIR${NO_COLOR}" >&2
         return 1
     fi
+    
+    # Find and source the appropriate plugin file
+    local plugin_file=""
     
     # Special handling for specific plugins
     case "$plugin_name" in
         "powerlevel10k")
-            [ -f "$plugin_dir/powerlevel10k.zsh-theme" ] && source "$plugin_dir/powerlevel10k.zsh-theme"
+            plugin_file="$plugin_dir/powerlevel10k.zsh-theme"
             ;;
         "fast-syntax-highlighting")
-            [ -f "$plugin_dir/fast-syntax-highlighting.plugin.zsh" ] && source "$plugin_dir/fast-syntax-highlighting.plugin.zsh"
+            plugin_file="$plugin_dir/fast-syntax-highlighting.plugin.zsh"
             ;;
         "zsh-useful-functions")
-            # This plugin uses .zsh extension, not .plugin.zsh
-            [ -f "$plugin_dir/zsh-useful-functions.zsh" ] && source "$plugin_dir/zsh-useful-functions.zsh"
+            plugin_file="$plugin_dir/zsh-useful-functions.zsh"
             ;;
         *)
             # Try .plugin.zsh first
             if [ -f "$plugin_dir/$plugin_name.plugin.zsh" ]; then
-                source "$plugin_dir/$plugin_name.plugin.zsh"
+                plugin_file="$plugin_dir/$plugin_name.plugin.zsh"
             # Try any .plugin.zsh file
-            elif compgen -G "$plugin_dir/*.plugin.zsh" > /dev/null; then
-                for plugin_file in "$plugin_dir"/*.plugin.zsh; do
-                    source "$plugin_file"
-                done
-            # Fall back to any .zsh file
-            else
-                if compgen -G "$plugin_dir/*.zsh" > /dev/null; then
-                    for zsh_file in "$plugin_dir"/*.zsh; do
-                        [ -f "$zsh_file" ] && source "$zsh_file"
-                    done
-                fi
+            elif [ -n "$(find "$plugin_dir" -maxdepth 1 -name '*.plugin.zsh' 2>/dev/null | head -1)" ]; then
+                plugin_file="$(find "$plugin_dir" -maxdepth 1 -name '*.plugin.zsh' 2>/dev/null | head -1)"
+            # Fall back to .zsh-theme
+            elif [ -f "$plugin_dir/$plugin_name.zsh-theme" ]; then
+                plugin_file="$plugin_dir/$plugin_name.zsh-theme"
+            # Fall back to main .zsh file
+            elif [ -f "$plugin_dir/$plugin_name.zsh" ]; then
+                plugin_file="$plugin_dir/$plugin_name.zsh"
             fi
             ;;
     esac
+    
+    # Source the plugin file if found
+    if [ -n "$plugin_file" ] && [ -f "$plugin_file" ]; then
+        # Using builtin source to preserve $0 context
+        builtin source "$plugin_file" 2>/dev/null || {
+            echo "${YELLOW}Warning: Failed to load plugin '$plugin_name'${NO_COLOR}" >&2
+        }
+    else
+        echo "${YELLOW}Warning: No suitable file found for plugin '$plugin_name'${NO_COLOR}" >&2
+    fi
 }
 
-# Note: Plugins must be loaded manually in .zshrc
-# Use: load_plugin "plugin-name"
-# Example:
-#   load_plugin "fzf-tab"
-#   load_plugin "zsh-autosuggestions"
+# Auto-load all plugins from zsh-mgr
+# This must run in global scope to preserve $0 context for plugins
+if command -v zsh-mgr &> /dev/null 2>&1; then
+    # Get list of plugins
+    _zsh_mgr_plugins=($(zsh-mgr list --names-only 2>/dev/null))
+    
+    for _zsh_mgr_plugin in "${_zsh_mgr_plugins[@]}"; do
+        # Find plugin directory
+        _zsh_mgr_plugin_dir=""
+        if [ -d "$ZSH_PLUGIN_DIR/$_zsh_mgr_plugin" ]; then
+            _zsh_mgr_plugin_dir="$ZSH_PLUGIN_DIR/$_zsh_mgr_plugin"
+        else
+            _zsh_mgr_plugin_dir=$(find "$ZSH_PLUGIN_DIR" -maxdepth 2 -type d -name "$_zsh_mgr_plugin" 2>/dev/null | head -n 1)
+        fi
+        
+        if [ -z "$_zsh_mgr_plugin_dir" ]; then
+            continue
+        fi
+        
+        # Find and source the appropriate plugin file
+        _zsh_mgr_plugin_file=""
+        case "$_zsh_mgr_plugin" in
+            "powerlevel10k")
+                _zsh_mgr_plugin_file="$_zsh_mgr_plugin_dir/powerlevel10k.zsh-theme"
+                ;;
+            "fast-syntax-highlighting")
+                _zsh_mgr_plugin_file="$_zsh_mgr_plugin_dir/fast-syntax-highlighting.plugin.zsh"
+                ;;
+            "zsh-useful-functions")
+                _zsh_mgr_plugin_file="$_zsh_mgr_plugin_dir/zsh-useful-functions.zsh"
+                ;;
+            *)
+                # Try .plugin.zsh first
+                if [ -f "$_zsh_mgr_plugin_dir/$_zsh_mgr_plugin.plugin.zsh" ]; then
+                    _zsh_mgr_plugin_file="$_zsh_mgr_plugin_dir/$_zsh_mgr_plugin.plugin.zsh"
+                elif [ -f "$_zsh_mgr_plugin_dir/$_zsh_mgr_plugin.zsh-theme" ]; then
+                    _zsh_mgr_plugin_file="$_zsh_mgr_plugin_dir/$_zsh_mgr_plugin.zsh-theme"
+                elif [ -f "$_zsh_mgr_plugin_dir/$_zsh_mgr_plugin.zsh" ]; then
+                    _zsh_mgr_plugin_file="$_zsh_mgr_plugin_dir/$_zsh_mgr_plugin.zsh"
+                else
+                    # Find any .plugin.zsh file
+                    _zsh_mgr_plugin_file=$(find "$_zsh_mgr_plugin_dir" -maxdepth 1 -name '*.plugin.zsh' 2>/dev/null | head -1)
+                fi
+                ;;
+        esac
+        
+        # Source the plugin file if found
+        if [ -n "$_zsh_mgr_plugin_file" ] && [ -f "$_zsh_mgr_plugin_file" ]; then
+            source "$_zsh_mgr_plugin_file" 2>/dev/null
+        fi
+    done
+    
+    # Clean up temporary variables
+    unset _zsh_mgr_plugins _zsh_mgr_plugin _zsh_mgr_plugin_dir _zsh_mgr_plugin_file
+fi
 
-# Helper functions for backward compatibility
+# Auto-update check (non-blocking, background)
+_auto_update_check() {
+    local threshold="${MGR_TIME_THRESHOLD:-604800}"  # Default: 1 week
+    local timestamp_file="$ZSH_PLUGIN_DIR/.last-auto-update"
+    
+    # Create plugin dir if it doesn't exist
+    [ ! -d "$ZSH_PLUGIN_DIR" ] && mkdir -p "$ZSH_PLUGIN_DIR"
+    
+    if [[ -f "$timestamp_file" ]]; then
+        local last_update=$(cat "$timestamp_file" 2>/dev/null || echo "0")
+        local now=$(date +%s)
+        local diff=$((now - last_update))
+        
+        if [[ $diff -lt $threshold ]]; then
+            return 0
+        fi
+    fi
+    
+    # Update in background (non-blocking)
+    # This runs silently and doesn't interrupt the shell startup
+    (
+        zsh-mgr update &>/dev/null && date +%s > "$timestamp_file"
+    ) &!
+}
+
+# Execute auto-update in background
+_auto_update_check &!
+
+# Deprecated legacy function for backward compatibility
+load_plugin() {
+    echo "${YELLOW}Warning: load_plugin is deprecated. Plugins are auto-loaded from zsh-mgr.${NO_COLOR}" >&2
+    echo "Manage plugins with: zsh-mgr {add|remove|update|list}${NO_COLOR}" >&2
+    _load_plugin "$1"
+}
+
+# Deprecated helper functions
 add_plugin() {
     echo "${YELLOW}Note: add_plugin is deprecated. Use 'zsh-mgr add $1' instead${NO_COLOR}"
     zsh-mgr add "$1" ${2:+--flags="$2"}
