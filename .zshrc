@@ -14,22 +14,17 @@ export ZSH_CONFIG_DIR="$HOME/.config/zsh"
 # Source all scripts
 source $ZSH_CONFIG_DIR/zsh-sources.zsh
 
-# Plugins
+# Plugins - loaded automatically from $ZSH_PLUGIN_DIR
+# Use 'zsh-mgr add <user/repo>' to add new plugins
+# Use 'zsh-mgr list' to see installed plugins
+# Use 'zsh-mgr update' to update all plugins
+# Use 'zsh-mgr check' to see next update dates
 
-# Only loads this plugin and fzf's autocompletion if it (fzf) is installed
+# Only loads fzf's autocompletion if it is installed
 if check_cmd_exists "fzf"; then
   source "$FZF_DIR_FILE_LOC/key-bindings.zsh"
   source "$FZF_DIR_FILE_LOC/completion.zsh"
-
-  add_plugin "Aloxaf/fzf-tab"
 fi
-
-add_plugin "zsh-users/zsh-autosuggestions"
-add_plugin "zsh-users/zsh-history-substring-search"
-add_plugin "zdharma-continuum/fast-syntax-highlighting"
-add_plugin "zsh-users/zsh-completions"
-add_plugin "romkatv/powerlevel10k" "--depth=1"
-add_plugin "amt911/zsh-useful-functions"
 
 
 # Man parser for tab completion on unsupported commands
