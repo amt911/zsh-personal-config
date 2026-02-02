@@ -31,23 +31,64 @@ fi
 
 # ════════════════════════════════════════════════════════════════
 # FUNCIÓN PRINCIPAL: plugin
-# Carga explícita de plugins (sintaxis: plugin user/repo)
+# Carga explícita de plugins (sintaxis: plugin user/repo [args...])
 # ════════════════════════════════════════════════════════════════
 
 plugin() {
     local repo="$1"
+    shift
+    local plugin_args=("$@")  # Argumentos adicionales (depth=1, branch=dev, etc.)
+    
     local plugin_name="${repo##*/}"  # Extrae el nombre del repo (después del último /)
-    local plugin_dir="$ZSH_PLUGIN_DIR/$plugin_name"
+    # El directorio puede ser user/repo o solo repo (compatibilidad con instalaciones antiguas)
+    local plugin_dir="$ZSH_PLUGIN_DIR/$repo"
+    if [ ! -d "$plugin_dir" ]; then
+        # Intentar con solo el nombre del plugin (formato antiguo)
+        plugin_dir="$ZSH_PLUGIN_DIR/$plugin_name"
+    fi
     
     # Si el plugin no está instalado, instalarlo automáticamente (lazy install)
     if [ ! -d "$plugin_dir" ]; then
         echo "${YELLOW}⚡ Installing $plugin_name...${NO_COLOR}" >&2
-        if zsh-mgr add "$repo" 2>/dev/null; then
-            echo "${GREEN}✓ Installed $plugin_name${NO_COLOR}" >&2
+        
+        # Construir comando con argumentos
+        # zsh-mgr usa --flags para pasar argumentos a git clone
+        # Convertir argumentos al formato correcto
+        if [ ${#plugin_args[@]} -gt 0 ]; then
+            local git_flags=""
+            for arg in "${plugin_args[@]}"; do
+                # Convertir depth=1 -> --depth=1, branch=name -> --branch=name, etc.
+                if [[ "$arg" == *=* ]]; then
+                    git_flags="$git_flags --$arg"
+                else
+                    # Argumentos sin valor (ej: single-branch)
+                    git_flags="$git_flags --$arg"
+                fi
+            done
+            # Remover espacio inicial
+            git_flags="${git_flags# }"
+            
+            # Ejecutar directamente sin eval
+            if zsh-mgr add "$repo" --flags "$git_flags" >/dev/null 2>&1; then
+                echo "${GREEN}✓ Installed $plugin_name${NO_COLOR}" >&2
+            else
+                echo "${RED}✗ Failed to install $plugin_name${NO_COLOR}" >&2
+                echo "${YELLOW}Try manually: zsh-mgr add '$repo' --flags '$git_flags'${NO_COLOR}" >&2
+                return 1
+            fi
         else
-            echo "${RED}✗ Failed to install $plugin_name${NO_COLOR}" >&2
-            return 1
+            # Sin argumentos adicionales
+            if zsh-mgr add "$repo" >/dev/null 2>&1; then
+                echo "${GREEN}✓ Installed $plugin_name${NO_COLOR}" >&2
+            else
+                echo "${RED}✗ Failed to install $plugin_name${NO_COLOR}" >&2
+                return 1
+            fi
         fi
+        
+        # Actualizar plugin_dir después de la instalación
+        # zsh-mgr siempre instala en user/repo
+        plugin_dir="$ZSH_PLUGIN_DIR/$repo"
     fi
     
     # Determinar qué archivo cargar (optimizado con case para plugins conocidos)
@@ -64,13 +105,17 @@ plugin() {
             plugin_file="$plugin_dir/fzf-tab.plugin.zsh"
             ;;
         zsh-autosuggestions)
-            plugin_file="$plugin_dir/zsh-autosuggestions.plugin.zsh"
+            plugin_file="$plugin_dir/zsh-autosuggestions.zsh"
             ;;
         zsh-history-substring-search)
-            plugin_file="$plugin_dir/zsh-history-substring-search.plugin.zsh"
+            plugin_file="$plugin_dir/zsh-history-substring-search.zsh"
             ;;
         zsh-completions)
-            plugin_file="$plugin_dir/zsh-completions.plugin.zsh"
+            # Este plugin solo añade completions, no tiene archivo .zsh principal
+            # Agregar al fpath y retornar
+            fpath=("$plugin_dir/src" $fpath)
+            autoload -U compinit && compinit
+            return 0
             ;;
         zsh-useful-functions)
             plugin_file="$plugin_dir/zsh-useful-functions.zsh"
@@ -84,8 +129,8 @@ plugin() {
             elif [ -f "$plugin_dir/$plugin_name.zsh-theme" ]; then
                 plugin_file="$plugin_dir/$plugin_name.zsh-theme"
             else
-                # Último recurso: buscar cualquier .plugin.zsh
-                plugin_file=$(find "$plugin_dir" -maxdepth 1 -name '*.plugin.zsh' -print -quit 2>/dev/null)
+                # Último recurso: buscar en subdirectorios
+                plugin_file=$(find "$plugin_dir" -maxdepth 2 \( -name '*.plugin.zsh' -o -name '*.zsh-theme' \) -print -quit 2>/dev/null)
             fi
             ;;
     esac

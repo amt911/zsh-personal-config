@@ -17,15 +17,20 @@ source $ZSH_CONFIG_DIR/zsh-sources.zsh
 # ═══════════════════════════════════════════════════════════════════
 # PLUGINS - Declaración explícita y ordenada
 # ═══════════════════════════════════════════════════════════════════
-# Sintaxis: plugin user/repo
+# Sintaxis: plugin user/repo [args...]
 # Gestión:  zsh-mgr {add|remove|update|list}
 #
+# Argumentos opcionales (se pasan a git clone):
+#   depth=1         - Clone superficial (recomendado para temas grandes)
+#   branch=nombre   - Branch específico
+#   single-branch   - Solo el branch especificado
+#   
 # Los plugins se instalan automáticamente si no existen (lazy install)
 # Usa plugin_lazy para cargar solo cuando se necesite (ver ejemplos abajo)
 # ═══════════════════════════════════════════════════════════════════
 
 # Core plugins (siempre activos)
-plugin romkatv/powerlevel10k
+plugin romkatv/powerlevel10k depth=1
 plugin Aloxaf/fzf-tab
 plugin zsh-users/zsh-autosuggestions
 plugin zsh-users/zsh-history-substring-search
