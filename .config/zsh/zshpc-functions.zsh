@@ -20,7 +20,7 @@ check_distro() {
 
 # Updates the plugin manager to the latest main commit.
 update_zshpc(){
-    echo "${BRIGHT_CYAN}Updating zsh-personal-config...${NO_COLOR}"
+    echo "${BRIGHT_CYAN}Updating zsh-personal-config...${RESET_COLOR}"
     
     # Update the config repo
     if [ -d "$HOME/.zshpc/.git" ]; then
@@ -34,33 +34,33 @@ update_zshpc(){
         # Rebuild zsh-mgr if using local build
         if [ ! -f "/usr/bin/zsh-mgr" ] && [ ! -f "/usr/local/bin/zsh-mgr" ]; then
             if command -v cargo &> /dev/null; then
-                echo "${BRIGHT_CYAN}Rebuilding zsh-mgr...${NO_COLOR}"
+                echo "${BRIGHT_CYAN}Rebuilding zsh-mgr...${RESET_COLOR}"
                 cd "$HOME/.config/zsh/zsh-mgr/zsh-mgr-rs"
                 cargo build --release
                 mkdir -p "$HOME/.local/bin"
                 cp target/release/zsh-mgr "$HOME/.local/bin/"
-                echo "${GREEN}zsh-mgr rebuilt successfully${NO_COLOR}"
+                echo "${GREEN}zsh-mgr rebuilt successfully${RESET_COLOR}"
             fi
         fi
     fi
     
     # Update all plugins
     if command -v zsh-mgr &> /dev/null; then
-        echo "${BRIGHT_CYAN}Updating plugins...${NO_COLOR}"
+        echo "${BRIGHT_CYAN}Updating plugins...${RESET_COLOR}"
         zsh-mgr update
     fi
     
-    echo "${GREEN}Update complete!${NO_COLOR}"
+    echo "${GREEN}Update complete!${RESET_COLOR}"
 }
 
 
 # Check all update dates using zsh-mgr
 ck_all(){
     if command -v zsh-mgr &> /dev/null; then
-        echo "${BRIGHT_CYAN}Plugin and Manager Status:${NO_COLOR}"
+        echo "${BRIGHT_CYAN}Plugin and Manager Status:${RESET_COLOR}"
         zsh-mgr check
     else
-        echo "${RED}zsh-mgr not found. Please install it.${NO_COLOR}"
+        echo "${RED}zsh-mgr not found. Please install it.${RESET_COLOR}"
     fi
 }
 

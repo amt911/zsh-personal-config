@@ -6,6 +6,15 @@ else
     return 0
 fi 
 
+# Terminal configuration for better TUI support
+export TERM="${TERM:-xterm-256color}"
+export COLORTERM="${COLORTERM:-truecolor}"
+
+# Enable 24-bit color support if terminal supports it
+if [[ $COLORTERM == "truecolor" ]] || [[ $COLORTERM == "24bit" ]]; then
+    export TERM="xterm-256color"
+fi
+
 #TAMAÑO DEL HISTORIAL
 HISTFILE=~/.histfile
 HISTSIZE=100000
@@ -39,8 +48,8 @@ setopt HIST_IGNORE_SPACE         # Do not store commands if they start with the 
 export FZF_DIR_FILE_LOC="/usr/share/fzf/"       # Arch Linux location by default
 
 export ZSHPC_TIME_THRESHOLD=604800    # 1 week in seconds
-export TIME_THRESHOLD=604800        # 1 week in seconds
-export MGR_TIME_THRESHOLD=604800    # 1 week in seconds
+export TIME_THRESHOLD=10             # DEBUG: 10 seconds (production: 604800)
+export MGR_TIME_THRESHOLD=10         # DEBUG: 10 seconds (production: 604800)
 
 export ZSH_PLUGIN_DIR="$HOME/.zsh-plugins"
 
