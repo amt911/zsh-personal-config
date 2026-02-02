@@ -14,13 +14,36 @@ export ZSH_CONFIG_DIR="$HOME/.config/zsh"
 # Source all scripts
 source $ZSH_CONFIG_DIR/zsh-sources.zsh
 
-# Plugins are auto-loaded from zsh-mgr (see ~/.config/zsh/zsh-mgr-init.zsh)
-# Manage plugins with:
-#   zsh-mgr add <user/repo>     - Add a new plugin
-#   zsh-mgr remove <name>       - Remove a plugin
-#   zsh-mgr update              - Update all plugins (parallel, fast)
-#   zsh-mgr list                - List installed plugins
-#   zsh-mgr check               - Check next update dates
+# ═══════════════════════════════════════════════════════════════════
+# PLUGINS - Declaración explícita y ordenada
+# ═══════════════════════════════════════════════════════════════════
+# Sintaxis: plugin user/repo
+# Gestión:  zsh-mgr {add|remove|update|list}
+#
+# Los plugins se instalan automáticamente si no existen (lazy install)
+# Usa plugin_lazy para cargar solo cuando se necesite (ver ejemplos abajo)
+# ═══════════════════════════════════════════════════════════════════
+
+# Core plugins (siempre activos)
+plugin romkatv/powerlevel10k
+plugin Aloxaf/fzf-tab
+plugin zsh-users/zsh-autosuggestions
+plugin zsh-users/zsh-history-substring-search
+plugin zdharma-continuum/fast-syntax-highlighting
+plugin zsh-users/zsh-completions
+plugin amt911/zsh-useful-functions
+
+# ═══════════════════════════════════════════════════════════════════
+# LAZY LOADING (opcional - descomenta para usar)
+# ═══════════════════════════════════════════════════════════════════
+# Carga plugins solo cuando ejecutas comandos específicos
+# Sintaxis: plugin_lazy user/repo comando1 comando2 ...
+#
+# Ejemplos:
+# plugin_lazy junegunn/fzf fzf
+# plugin_lazy dbrgn/tealdeer tldr
+# plugin_lazy sharkdp/bat bat
+# ═══════════════════════════════════════════════════════════════════
 
 # Only loads fzf's autocompletion if it is installed
 if check_cmd_exists "fzf"; then
