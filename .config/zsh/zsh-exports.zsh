@@ -6,6 +6,15 @@ else
     return 0
 fi 
 
+# Terminal configuration for better TUI support
+export TERM="${TERM:-xterm-256color}"
+export COLORTERM="${COLORTERM:-truecolor}"
+
+# Enable 24-bit color support if terminal supports it
+if [[ $COLORTERM == "truecolor" ]] || [[ $COLORTERM == "24bit" ]]; then
+    export TERM="xterm-256color"
+fi
+
 #TAMAÑO DEL HISTORIAL
 HISTFILE=~/.histfile
 HISTSIZE=100000

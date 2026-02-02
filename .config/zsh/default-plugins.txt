@@ -1,0 +1,11 @@
+# Default plugins for zsh-personal-config
+# Format: user/repo [flags]
+# Lines starting with # are ignored
+
+Aloxaf/fzf-tab
+zsh-users/zsh-autosuggestions
+zsh-users/zsh-history-substring-search
+zdharma-continuum/fast-syntax-highlighting
+zsh-users/zsh-completions
+romkatv/powerlevel10k --depth 1
+amt911/zsh-useful-functions

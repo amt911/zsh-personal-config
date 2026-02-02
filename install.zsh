@@ -91,6 +91,22 @@ install_zsh_mgr() {
 # Install zsh-mgr
 install_zsh_mgr
 
+# Bootstrap default plugins
+if command -v zsh-mgr &> /dev/null && [ -f "$HOME/.config/zsh/default-plugins.txt" ]; then
+    echo ""
+    echo "Installing default plugins..."
+    if zsh-mgr bootstrap; then
+        echo "✓ Default plugins installed"
+        
+        # Generate .zshrc plugin loading code
+        echo ""
+        echo "Generating .zshrc plugin loading code..."
+        if zsh-mgr init; then
+            echo "✓ .zshrc updated with plugin loading code"
+        fi
+    fi
+fi
+
 echo ""
 echo "═══════════════════════════════════════"
 echo "  Installation complete!"

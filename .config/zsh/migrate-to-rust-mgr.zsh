@@ -80,47 +80,133 @@ if [ -f "$HOME/.config/zsh/zsh-mgr/.migrated" ]; then
     fi
 fi
 
-echo -e "${CYAN}Starting migration...${NC}"
+echo -e "${CYAN}Detecting existing plugins...${NC}"
 echo ""
 
-# Migrate each plugin
-migrated=0
-skipped=0
-failed=0
-
-for i in {1..${#PLUGINS[@]}}; do
-    plugin="${PLUGINS[$i]}"
-    flags="${PLUGIN_FLAGS[$i]}"
-    
-    echo -e "${CYAN}[$i/${#PLUGINS[@]}] Processing: $plugin${NC}"
-    
-    # Check if already installed
-    plugin_dir="$HOME/.zsh-plugins/$plugin"
-    if [ -d "$plugin_dir" ]; then
-        echo -e "${YELLOW}  ⚠ Already exists, skipping${NC}"
-        ((skipped++))
-    else
-        # Install with zsh-mgr
-        if [ -n "$flags" ]; then
-            if zsh-mgr add "$plugin" --flags="$flags"; then
-                echo -e "${GREEN}  ✓ Installed successfully${NC}"
-                ((migrated++))
-            else
-                echo -e "${RED}  ✗ Installation failed${NC}"
-                ((failed++))
-            fi
-        else
-            if zsh-mgr add "$plugin"; then
-                echo -e "${GREEN}  ✓ Installed successfully${NC}"
-                ((migrated++))
-            else
-                echo -e "${RED}  ✗ Installation failed${NC}"
-                ((failed++))
-            fi
+# Detect existing plugins in ~/.zsh-plugins/
+EXISTING_PLUGINS=()
+for dir in "$HOME/.zsh-plugins/"*/; do
+    if [ -d "$dir" ]; then
+        plugin_name=$(basename "$dir")
+        # Skip hidden directories (like .git)
+        if [[ ! "$plugin_name" =~ ^\. ]]; then
+            EXISTING_PLUGINS+=("$plugin_name")
         fi
     fi
-    echo ""
 done
+
+if [ ${#EXISTING_PLUGINS[@]} -eq 0 ]; then
+    echo -e "${YELLOW}No existing plugins found in ~/.zsh-plugins/${NC}"
+    echo ""
+    echo "Would you like to install the default plugins? [y/N]"
+    read confirm
+    if [[ "$confirm" =~ ^[Yy]$ ]]; then
+        # Install mode
+        echo -e "${CYAN}Installing default plugins...${NC}"
+        echo ""
+        
+        migrated=0
+        failed=0
+        
+        for i in {1..${#PLUGINS[@]}}; do
+            plugin="${PLUGINS[$i]}"
+            flags="${PLUGIN_FLAGS[$i]}"
+            
+            echo -e "${CYAN}[$i/${#PLUGINS[@]}] Installing: $plugin${NC}"
+            
+            if [ -n "$flags" ]; then
+                if zsh-mgr add "$plugin" $flags; then
+                    echo -e "${GREEN}  ✓ Installed${NC}"
+                    ((migrated++))
+                else
+                    echo -e "${RED}  ✗ Failed${NC}"
+                    ((failed++))
+                fi
+            else
+                if zsh-mgr add "$plugin"; then
+                    echo -e "${GREEN}  ✓ Installed${NC}"
+                    ((migrated++))
+                else
+                    echo -e "${RED}  ✗ Failed${NC}"
+                    ((failed++))
+                fi
+            fi
+            echo ""
+        done
+    else
+        echo "Installation cancelled"
+        exit 0
+    fi
+else
+    echo -e "${GREEN}Found ${#EXISTING_PLUGINS[@]} existing plugins:${NC}"
+    for plugin in "${EXISTING_PLUGINS[@]}"; do
+        echo "  - $plugin"
+    done
+    echo ""
+    
+    echo -e "${CYAN}Registering existing plugins with zsh-mgr...${NC}"
+    echo ""
+    
+    # Map plugin names to their repos
+    declare -A PLUGIN_MAP
+    PLUGIN_MAP[fzf-tab]="Aloxaf/fzf-tab"
+    PLUGIN_MAP[zsh-autosuggestions]="zsh-users/zsh-autosuggestions"
+    PLUGIN_MAP[zsh-history-substring-search]="zsh-users/zsh-history-substring-search"
+    PLUGIN_MAP[fast-syntax-highlighting]="zdharma-continuum/fast-syntax-highlighting"
+    PLUGIN_MAP[zsh-completions]="zsh-users/zsh-completions"
+    PLUGIN_MAP[powerlevel10k]="romkatv/powerlevel10k"
+    PLUGIN_MAP[zsh-useful-functions]="amt911/zsh-useful-functions"
+    
+    migrated=0
+    skipped=0
+    failed=0
+    
+    for plugin_dir in "${EXISTING_PLUGINS[@]}"; do
+        # Find the repo URL
+        repo="${PLUGIN_MAP[$plugin_dir]}"
+        
+        if [ -z "$repo" ]; then
+            echo -e "${YELLOW}⚠ Unknown plugin: $plugin_dir (skipping)${NC}"
+            ((skipped++))
+            continue
+        fi
+        
+        echo -e "${CYAN}Registering: $plugin_dir → $repo${NC}"
+        
+        # Create plugins.json entry manually using jq or direct creation
+        plugin_path="$HOME/.zsh-plugins/$plugin_dir"
+        
+        # Just create a simple registration using zsh-mgr's internal format
+        # Since the plugin is already installed, we just need to register it in plugins.json
+        
+        # For now, we'll use zsh-mgr add with --skip-clone flag if available
+        # Or we manually create the plugins.json
+        
+        # Check if zsh-mgr supports registration of existing plugins
+        # For simplicity, we'll create the entry manually
+        
+        config_file="$HOME/.config/zsh/plugins.json"
+        
+        # Create or update plugins.json
+        if [ ! -f "$config_file" ]; then
+            echo '{"plugins":[]}' > "$config_file"
+        fi
+        
+        # Add entry using jq if available, otherwise skip
+        if command -v jq &> /dev/null; then
+            temp_file=$(mktemp)
+            jq --arg name "$plugin_dir" --arg repo "$repo" --arg path "$plugin_path" \
+                '.plugins += [{"name": $name, "repo": $repo, "path": $path}]' \
+                "$config_file" > "$temp_file" && mv "$temp_file" "$config_file"
+            echo -e "${GREEN}  ✓ Registered${NC}"
+            ((migrated++))
+        else
+            echo -e "${YELLOW}  ⚠ jq not found, manual registration needed${NC}"
+            ((skipped++))
+        fi
+        echo ""
+    done
+fi
 
 # Create migration marker
 mkdir -p "$HOME/.config/zsh/zsh-mgr"

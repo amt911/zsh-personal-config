@@ -2,10 +2,13 @@
 
 This is my personal zsh config. It includes the following:
 
-- Some plugins that I like.
-- **My own plugin manager [zsh-mgr](https://github.com/amt911/zsh-mgr) - now fully written in Rust!**
-- **Parallel Git updater with real-time progress**
-- Some aliases and styles (including man coloring). Some of these styles are extracted from [Prezto](https://github.com/sorin-ionescu/prezto).
+- Curated set of productivity plugins
+- **My own plugin manager [zsh-mgr](https://github.com/amt911/zsh-mgr) - fully written in Rust!**
+- **Parallel Git updates** with real-time progress
+- **Non-blocking auto-updates** (background, won't slow shell startup)
+- **Auto-recovery** - plugins.json recreates itself if deleted (~19ms)
+- **Manual plugin control** - explicit loading in .zshrc
+- Beautiful aliases and styles (including man coloring) from [Prezto](https://github.com/sorin-ionescu/prezto)
 
 ## Installation
 
@@ -20,6 +23,7 @@ This will:
 2. Initialize submodules
 3. Detect if zsh-mgr is installed via package manager
 4. If not, build from source (requires Rust) or skip if not available
+5. Bootstrap default plugins automatically
 
 ### System Package Installation (Recommended)
 
@@ -43,6 +47,8 @@ sudo rpm -i zsh-mgr.rpm
 After installing the package, run:
 ```console
 zsh-mgr install
+zsh-mgr bootstrap  # Install default plugins
+zsh-mgr init       # Update .zshrc with plugin loading code
 ```
 
 ### Manual Installation
