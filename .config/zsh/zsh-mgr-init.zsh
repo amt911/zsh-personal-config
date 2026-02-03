@@ -11,6 +11,7 @@ fi
 
 # Color definitions
 export BRIGHT_CYAN='\033[1;36m'
+export BLUE='\033[0;34m'
 export GREEN='\033[0;32m'
 export RED='\033[0;31m'
 export YELLOW='\033[1;33m'
@@ -39,23 +40,26 @@ plugin() {
     shift
     local plugin_args=("$@")  # Argumentos adicionales (depth=1, branch=dev, etc.)
     
-    local plugin_name="${repo##*/}"  # Extrae el nombre del repo (después del último /)
-    # El directorio puede ser user/repo o solo repo (compatibilidad con instalaciones antiguas)
-    local plugin_dir="$ZSH_PLUGIN_DIR/$repo"
-    if [ ! -d "$plugin_dir" ]; then
-        # Intentar con solo el nombre del plugin (formato antiguo)
-        plugin_dir="$ZSH_PLUGIN_DIR/$plugin_name"
+    # Validación básica
+    if [[ ! "$repo" =~ ^[^/]+/[^/]+$ ]]; then
+        echo "${RED}✗ Invalid format: $repo${NO_COLOR}" >&2
+        echo "${YELLOW}  Expected: user/repo${NO_COLOR}" >&2
+        return 1
     fi
     
-    # Si el plugin no está instalado, instalarlo automáticamente (lazy install)
+    local plugin_name="${repo##*/}"  # Extrae el nombre del repo (después del último /)
+    local plugin_dir="$ZSH_PLUGIN_DIR/$repo"
+    
+    # Si el plugin no está instalado, instalarlo en BACKGROUND sin bloquear
     if [ ! -d "$plugin_dir" ]; then
-        echo "${YELLOW}⚡ Installing $plugin_name...${NO_COLOR}" >&2
+        # Show quick message but DON'T wait
+        echo "${BLUE}⚡ Installing $plugin_name in background...${NO_COLOR}" >&2
         
-        # Construir comando con argumentos
-        # zsh-mgr usa --flags para pasar argumentos a git clone
-        # Convertir argumentos al formato correcto
-        if [ ${#plugin_args[@]} -gt 0 ]; then
+        # Launch installation in background
+        (
             local git_flags=""
+            
+            # Procesar argumentos opcionales
             for arg in "${plugin_args[@]}"; do
                 # Convertir depth=1 -> --depth=1, branch=name -> --branch=name, etc.
                 if [[ "$arg" == *=* ]]; then
@@ -68,27 +72,26 @@ plugin() {
             # Remover espacio inicial
             git_flags="${git_flags# }"
             
-            # Ejecutar directamente sin eval
-            if zsh-mgr add "$repo" --flags "$git_flags" >/dev/null 2>&1; then
-                echo "${GREEN}✓ Installed $plugin_name${NO_COLOR}" >&2
+            # Ejecutar en background - la salida va a un log temporal
+            local log_file="${TMPDIR:-/tmp}/zsh-mgr-install-${plugin_name}.log"
+            
+            if [[ -n "$git_flags" ]]; then
+                zsh-mgr add "$repo" --flags "$git_flags" >"$log_file" 2>&1
             else
-                echo "${RED}✗ Failed to install $plugin_name${NO_COLOR}" >&2
-                echo "${YELLOW}Try manually: zsh-mgr add '$repo' --flags '$git_flags'${NO_COLOR}" >&2
-                return 1
+                zsh-mgr add "$repo" >"$log_file" 2>&1
             fi
-        else
-            # Sin argumentos adicionales
-            if zsh-mgr add "$repo" >/dev/null 2>&1; then
-                echo "${GREEN}✓ Installed $plugin_name${NO_COLOR}" >&2
+            
+            if [[ $? -eq 0 ]]; then
+                echo "${GREEN}✓ $plugin_name installed${NO_COLOR}" >&2
+                rm -f "$log_file"
             else
-                echo "${RED}✗ Failed to install $plugin_name${NO_COLOR}" >&2
-                return 1
+                echo "${RED}✗ Failed to install $plugin_name - check: $log_file${NO_COLOR}" >&2
             fi
-        fi
+        ) &
         
-        # Actualizar plugin_dir después de la instalación
-        # zsh-mgr siempre instala en user/repo
-        plugin_dir="$ZSH_PLUGIN_DIR/$repo"
+        # DON'T wait - continue loading shell
+        # The plugin will be available on next shell restart
+        return 0
     fi
     
     # Determinar qué archivo cargar (optimizado con case para plugins conocidos)
@@ -238,9 +241,35 @@ _zsh_mgr_auto_update &!
 
 # Backward compatibility: load_plugin -> plugin
 load_plugin() {
-    echo "${YELLOW}⚠ Deprecated: load_plugin() is now plugin()${NO_COLOR}" >&2
-    echo "${YELLOW}  Update your .zshrc: load_plugin '$1' -> plugin 'user/$1'${NO_COLOR}" >&2
-    plugin "$1"
+    # Silently convert to new format - NO warnings during shell init
+    local plugin_name="$1"
+    
+    # Try to find the full repo name in plugins.json
+    local full_repo=""
+    if [[ -f "$ZSH_CONFIG_DIR/zsh-mgr/plugins.json" ]]; then
+        # Extract repo name that ends with /$plugin_name
+        full_repo=$(jq -r --arg name "$plugin_name" '.plugins[] | select(.name | endswith("/" + $name)) | .name' "$ZSH_CONFIG_DIR/zsh-mgr/plugins.json" 2>/dev/null | head -1)
+    fi
+    
+    # Fallback: try to detect from installed directories
+    if [[ -z "$full_repo" ]]; then
+        # Search in ZSH_PLUGIN_DIR for matching directory
+        for dir in "$ZSH_PLUGIN_DIR"/*/*/"$plugin_name"(N); do
+            # Extract user/repo from path
+            full_repo="${dir#$ZSH_PLUGIN_DIR/}"
+            full_repo="${full_repo%/$plugin_name}"
+            break
+        done
+    fi
+    
+    # If we found the full repo name, use it
+    if [[ -n "$full_repo" ]]; then
+        plugin "$full_repo"
+    else
+        # Last resort: show error but don't block
+        echo "${RED}✗ Cannot find plugin: $plugin_name${NO_COLOR}" >&2
+        echo "${YELLOW}  Try: plugin 'user/$plugin_name'${NO_COLOR}" >&2
+    fi
 }
 
 # Backward compatibility: add_plugin
