@@ -50,47 +50,53 @@ plugin() {
     local plugin_name="${repo##*/}"  # Extrae el nombre del repo (después del último /)
     local plugin_dir="$ZSH_PLUGIN_DIR/$repo"
     
-    # Si el plugin no está instalado, instalarlo en BACKGROUND sin bloquear
+    # ✅ FIX: Verificar AMBAS estructuras (nueva: user/repo, antigua: plugin_name)
+    local old_plugin_dir="$ZSH_PLUGIN_DIR/$plugin_name"
+    
+    # Si existe en estructura antigua, usar esa
+    if [ -d "$old_plugin_dir" ] && [ ! -d "$plugin_dir" ]; then
+        plugin_dir="$old_plugin_dir"
+    fi
+    
+    # Si el plugin no está instalado EN NINGUNA ESTRUCTURA
     if [ ! -d "$plugin_dir" ]; then
-        # Show quick message but DON'T wait
-        echo "${BLUE}⚡ Installing $plugin_name in background...${NO_COLOR}" >&2
-        
-        # Launch installation in background
-        (
-            local git_flags=""
-            
-            # Procesar argumentos opcionales
-            for arg in "${plugin_args[@]}"; do
-                # Convertir depth=1 -> --depth=1, branch=name -> --branch=name, etc.
-                if [[ "$arg" == *=* ]]; then
-                    git_flags="$git_flags --$arg"
+        # ✅ FIX: Silenciar completamente los jobs en background
+        {
+            (
+                local git_flags=""
+                
+                # Procesar argumentos opcionales
+                for arg in "${plugin_args[@]}"; do
+                    # Convertir depth=1 -> --depth=1, branch=name -> --branch=name, etc.
+                    if [[ "$arg" == *=* ]]; then
+                        git_flags="$git_flags --$arg"
+                    else
+                        # Argumentos sin valor (ej: single-branch)
+                        git_flags="$git_flags --$arg"
+                    fi
+                done
+                # Remover espacio inicial
+                git_flags="${git_flags# }"
+                
+                # Ejecutar en background - la salida va a un log temporal
+                local log_file="${TMPDIR:-/tmp}/zsh-mgr-install-${plugin_name}.log"
+                
+                if [[ -n "$git_flags" ]]; then
+                    zsh-mgr add "$repo" --flags "$git_flags" >"$log_file" 2>&1
                 else
-                    # Argumentos sin valor (ej: single-branch)
-                    git_flags="$git_flags --$arg"
+                    zsh-mgr add "$repo" >"$log_file" 2>&1
                 fi
-            done
-            # Remover espacio inicial
-            git_flags="${git_flags# }"
-            
-            # Ejecutar en background - la salida va a un log temporal
-            local log_file="${TMPDIR:-/tmp}/zsh-mgr-install-${plugin_name}.log"
-            
-            if [[ -n "$git_flags" ]]; then
-                zsh-mgr add "$repo" --flags "$git_flags" >"$log_file" 2>&1
-            else
-                zsh-mgr add "$repo" >"$log_file" 2>&1
-            fi
-            
-            if [[ $? -eq 0 ]]; then
-                echo "${GREEN}✓ $plugin_name installed${NO_COLOR}" >&2
-                rm -f "$log_file"
-            else
-                echo "${RED}✗ Failed to install $plugin_name - check: $log_file${NO_COLOR}" >&2
-            fi
-        ) &
+                
+                if [[ $? -eq 0 ]]; then
+                    rm -f "$log_file"
+                fi
+            ) &
+        } &>/dev/null
         
-        # DON'T wait - continue loading shell
-        # The plugin will be available on next shell restart
+        # ✅ FIX: Disown inmediatamente para evitar mensajes
+        disown &>/dev/null
+        
+        # El plugin estará disponible en el próximo reinicio
         return 0
     fi
     
