@@ -4,10 +4,7 @@ if [ "$ZSH_FUNCTIONS_ZSHPC" != yes ]; then
     ZSH_FUNCTIONS_ZSHPC=yes
 else
     return 0
-fi 
-
-source "$ZSH_CONFIG_DIR/zsh-mgr/generic-auto-updater.zsh"
-source "$ZSH_CONFIG_DIR/zsh-mgr/zsh-mgr.zsh"
+fi
 
 check_distro() {
     local -r DISTRO=$(awk 'BEGIN{OFS=FS="="} /^NAME=/{print substr($NF,2,length($NF)-2)}' /etc/os-release)
@@ -23,28 +20,48 @@ check_distro() {
 
 # Updates the plugin manager to the latest main commit.
 update_zshpc(){
-    _generic_updater "personal config" "$HOME/.zshpc"
-    update_mgr
+    echo "${BRIGHT_CYAN}Updating zsh-personal-config...${RESET_COLOR}"
+    
+    # Update the config repo
+    if [ -d "$HOME/.zshpc/.git" ]; then
+        git -C "$HOME/.zshpc" pull
+    fi
+    
+    # Update zsh-mgr submodule
+    if [ -d "$HOME/.config/zsh/zsh-mgr/.git" ]; then
+        git -C "$HOME/.config/zsh/zsh-mgr" pull
+        
+        # Rebuild zsh-mgr if using local build
+        if [ ! -f "/usr/bin/zsh-mgr" ] && [ ! -f "/usr/local/bin/zsh-mgr" ]; then
+            if command -v cargo &> /dev/null; then
+                echo "${BRIGHT_CYAN}Rebuilding zsh-mgr...${RESET_COLOR}"
+                cd "$HOME/.config/zsh/zsh-mgr/zsh-mgr-rs"
+                cargo build --release
+                mkdir -p "$HOME/.local/bin"
+                cp target/release/zsh-mgr "$HOME/.local/bin/"
+                echo "${GREEN}zsh-mgr rebuilt successfully${RESET_COLOR}"
+            fi
+        fi
+    fi
+    
+    # Update all plugins
+    if command -v zsh-mgr &> /dev/null; then
+        echo "${BRIGHT_CYAN}Updating plugins...${RESET_COLOR}"
+        zsh-mgr update
+    fi
+    
+    echo "${GREEN}Update complete!${RESET_COLOR}"
 }
 
 
-# Auto-updates the personal config
-_auto_updater_zshpc(){
-    _generic_auto_updater "personal config" "$HOME/.zshpc" "$ZSHPC_TIME_THRESHOLD"
-}
-
-# $1 (Optional yes/no): Display legend?
-check_zshpc_update_date(){
-    _check_comp_update_date "zshpc" "$HOME/.zshpc" "$ZSHPC_TIME_THRESHOLD" "Repo name#Next update" "${GREEN}" "${1:-yes}"
-}
-
-# $1 (Optional yes/no): Display legend? Default: yes
+# Check all update dates using zsh-mgr
 ck_all(){
-    check_zshpc_update_date no
-    ck_mgr_plugin no
-
-    [ "${1:-yes}" = "yes" ] && _display_color_legend    
+    if command -v zsh-mgr &> /dev/null; then
+        echo "${BRIGHT_CYAN}Plugin and Manager Status:${RESET_COLOR}"
+        zsh-mgr check
+    else
+        echo "${RED}zsh-mgr not found. Please install it.${RESET_COLOR}"
+    fi
 }
 
 check_distro
-_auto_updater_zshpc

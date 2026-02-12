@@ -19,6 +19,7 @@ fi
 # This is to expand other aliases
 alias sudo="sudo "
 alias run0="run0 "
+alias watch="watch "
 
 alias dd="dd status=progress"
 alias cp="cp --reflink=auto"
@@ -31,7 +32,7 @@ alias yaylmo="yay -Qqd | yay -Rsu --print -"    #List more orphans
 alias yaycmo="yay -Qqd | yay -Rsu -"    #Clear more orphans
 alias yaylf="yay -Qm"   #List foreign packages
 alias yayrmf="yay -Rdds"    # Forces remove a package BREAKING the system
-alias yay-broken-deps="yay -Dk"     # Checks for broken dependencies
+alias yay-broken-deps="yay -Dk && yay -T"     # Checks for broken dependencies (https://www.reddit.com/r/archlinux/comments/vrbsg8/pacman_deps_check/)
 
 
 # git aliases
@@ -46,6 +47,8 @@ alias gr="git restore"
 alias gren="git branch -m"
 alias gm="git merge --no-ff"
 alias lgit="lazygit"
+alias gbm='git branch -r --merged | grep -Ev "(^\*|^\+|master|main|dev)"'
+alias gprune='git remote prune origin'
 
 # Remove config aliases
 alias re="source $HOME/.zshrc"
@@ -68,3 +71,4 @@ alias latexmkpdf="latexmk -synctex=1 -interaction=nonstopmode -file-line-error -
 # Misc aliases
 alias eject_hdd="udisksctl power-off -b"
 alias file_mgr_tui="yazi"
+alias cache_mem="grep -e \"Writeback:\" -e \"Dirty:\" /proc/meminfo"
