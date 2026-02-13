@@ -27,8 +27,7 @@ This will:
 3. Detect if `zsh-mgr` is already installed via system package
 4. If not, build from source with Cargo and install to `~/.local/bin`
 5. Run `zsh-mgr install --quiet` (initial configuration)
-6. Run `zsh-mgr bootstrap` (install default plugins from `default-plugins.txt`)
-7. Run `zsh-mgr init` (generate plugin loading code in `.zshrc`)
+6. Parse `plugin` declarations from `.zshrc` and install each one via `zsh-mgr add`
 
 <details>
 <summary><b>Example installation output</b></summary>
@@ -211,7 +210,6 @@ This will:
     ├── zsh-aliases.zsh          # Aliases (git, yay, rsync, etc.)
     ├── zsh-bindings.zsh         # Key bindings
     ├── zsh-styles.zsh           # Completion styles (fzf-tab, Prezto)
-    ├── default-plugins.txt      # Default plugins for bootstrap
     └── zsh-mgr/                 # zsh-mgr submodule (Rust source)
 
 ~/.zsh-plugins/                  # Where plugins are installed

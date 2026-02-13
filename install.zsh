@@ -91,20 +91,32 @@ install_zsh_mgr() {
 # Install zsh-mgr
 install_zsh_mgr
 
-# Bootstrap default plugins
-if command -v zsh-mgr &> /dev/null && [ -f "$HOME/.config/zsh/default-plugins.txt" ]; then
+# Bootstrap plugins from .zshrc declarations (no default-plugins.txt needed)
+# Reads 'plugin user/repo [flags...]' lines directly from .zshrc
+if command -v zsh-mgr &> /dev/null; then
     echo ""
-    echo "Installing default plugins..."
-    if zsh-mgr bootstrap; then
-        echo "✓ Default plugins installed"
-        
-        # Generate .zshrc plugin loading code
-        echo ""
-        echo "Generating .zshrc plugin loading code..."
-        if zsh-mgr init; then
-            echo "✓ .zshrc updated with plugin loading code"
+    echo "Installing plugins declared in .zshrc..."
+
+    while IFS= read -r line; do
+        # Extract repo (2nd field) and optional flags (remaining fields)
+        _repo=$(echo "$line" | awk '{print $2}')
+        _flags=$(echo "$line" | awk '{$1=$2=""; sub(/^[ \t]+/, ""); print}')
+
+        _git_flags=""
+        for _arg in ${=_flags}; do
+            _git_flags="$_git_flags --$_arg"
+        done
+        _git_flags="${_git_flags## }"
+
+        if [[ -n "$_git_flags" ]]; then
+            zsh-mgr add "$_repo" --flags "$_git_flags"
+        else
+            zsh-mgr add "$_repo"
         fi
-    fi
+    done < <(grep -E '^\s*plugin\s+[a-zA-Z0-9_-]+/[a-zA-Z0-9._-]+' "$ZSH_REPO_PATH/.zshrc")
+
+    echo ""
+    echo "✓ Plugins installed"
 fi
 
 echo ""
