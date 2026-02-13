@@ -8,6 +8,17 @@
 # zsh version
 readonly ZSH_REPO_PATH="$( cd -- "$( dirname -- "${(%):-%x}" )" &> /dev/null && pwd )"
 
+# ── Determine the REAL home of the current user (by UID, not $HOME) ──
+# sudo can preserve $HOME from the calling user, which causes us to
+# operate on another user's directories.  We look up the passwd entry
+# for our effective UID so we always target the right home.
+_get_real_home() {
+    local _rh
+    _rh=$(getent passwd "$(id -u)" 2>/dev/null | cut -d: -f6)
+    [ -n "$_rh" ] && echo "$_rh" || echo "$HOME"
+}
+readonly REAL_HOME="$(_get_real_home)"
+
 # Which Powerlevel10k theme variant to use. It uses lean by default.
 readonly P10K_VARIANT=${1:-"lean"}
 p10k_file_name=".p10k.zsh"
@@ -18,14 +29,14 @@ p10k_file_name=".p10k.zsh"
 # We manually create the folder in order to avoid copying 
 # files to the repo and letting other plugins install on the same folder
 # mkdir -p "$HOME/.config/zsh"
-mkdir -p "$HOME/.zsh-plugins"
+mkdir -p "$REAL_HOME/.zsh-plugins"
 
-ln -sf "$ZSH_REPO_PATH/.zshrc" "$HOME/.zshrc"
+ln -sf "$ZSH_REPO_PATH/.zshrc" "$REAL_HOME/.zshrc"
 
-ln -sf "$ZSH_REPO_PATH/$p10k_file_name" "$HOME/.p10k.zsh"
+ln -sf "$ZSH_REPO_PATH/$p10k_file_name" "$REAL_HOME/.p10k.zsh"
 
-mkdir -p "$HOME/.config"
-ln -sf "$ZSH_REPO_PATH/.config/zsh" "$HOME/.config/zsh"
+mkdir -p "$REAL_HOME/.config"
+ln -sf "$ZSH_REPO_PATH/.config/zsh" "$REAL_HOME/.config/zsh"
 
 # Check if zsh-mgr is installed via package manager
 check_system_zsh_mgr() {
@@ -51,20 +62,20 @@ install_zsh_mgr() {
         zsh-mgr install --quiet
     elif command -v cargo &> /dev/null; then
         echo "Building zsh-mgr from source..."
-        cd "$HOME/.config/zsh/zsh-mgr/zsh-mgr-rs"
+        cd "$REAL_HOME/.config/zsh/zsh-mgr/zsh-mgr-rs"
         cargo build --release
         
         # Install binaries to ~/.local/bin
-        mkdir -p "$HOME/.local/bin"
-        cp target/release/zsh-mgr "$HOME/.local/bin/"
+        mkdir -p "$REAL_HOME/.local/bin"
+        cp target/release/zsh-mgr "$REAL_HOME/.local/bin/"
         
         # Add ~/.local/bin to PATH if not already there
-        if [[ ":$PATH:" != *":$HOME/.local/bin:"* ]]; then
-            export PATH="$HOME/.local/bin:$PATH"
+        if [[ ":$PATH:" != *":$REAL_HOME/.local/bin:"* ]]; then
+            export PATH="$REAL_HOME/.local/bin:$PATH"
         fi
         
         # Run install
-        "$HOME/.local/bin/zsh-mgr" install --quiet
+        "$REAL_HOME/.local/bin/zsh-mgr" install --quiet
         
         echo ""
         echo "✓ zsh-mgr built and installed to ~/.local/bin"
