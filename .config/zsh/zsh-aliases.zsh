@@ -72,3 +72,6 @@ alias latexmkpdf="latexmk -synctex=1 -interaction=nonstopmode -file-line-error -
 alias eject_hdd="udisksctl power-off -b"
 alias file_mgr_tui="yazi"
 alias cache_mem="grep -e \"Writeback:\" -e \"Dirty:\" /proc/meminfo"
+
+# npm to pnpm alias
+alias npm="pnpm"
