@@ -75,3 +75,7 @@ alias cache_mem="grep -e \"Writeback:\" -e \"Dirty:\" /proc/meminfo"
 
 # npm to pnpm alias
 alias npm="pnpm"
+
+alias claude-opus='env -u ANTHROPIC_BASE_URL -u ANTHROPIC_AUTH_TOKEN -u ANTHROPIC_API_KEY claude --model opus'
+
+alias claude-local='ANTHROPIC_BASE_URL=http://127.0.0.1:8080 ANTHROPIC_AUTH_TOKEN=local claude --model qwen3.8-27b'
