@@ -63,11 +63,19 @@ install_zsh_mgr() {
     elif command -v cargo &> /dev/null; then
         echo "Building zsh-mgr from source..."
         cd "$REAL_HOME/.config/zsh/zsh-mgr/zsh-mgr-rs"
-        cargo build --release
-        
+        if ! cargo build --release; then
+            echo ""
+            echo "✗ zsh-mgr build failed. Skipping zsh-mgr installation." >&2
+            return 1
+        fi
+
         # Install binaries to ~/.local/bin
         mkdir -p "$REAL_HOME/.local/bin"
-        cp target/release/zsh-mgr "$REAL_HOME/.local/bin/"
+        if ! cp target/release/zsh-mgr "$REAL_HOME/.local/bin/"; then
+            echo ""
+            echo "✗ Could not copy zsh-mgr to ~/.local/bin. Skipping zsh-mgr installation." >&2
+            return 1
+        fi
         
         # Add ~/.local/bin to PATH if not already there
         if [[ ":$PATH:" != *":$REAL_HOME/.local/bin:"* ]]; then
